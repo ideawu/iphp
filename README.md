@@ -53,7 +53,7 @@
 
 ### 演示
 
-| Path | Controller File | Controller#action | View | Full URL |
+| Path | Controller | Aaction | View | Full URL |
 | ---- | ---- | ---- | ---- | ---- |
 | about | about.php | AboutController#index | about.tpl.php | http://localhost/iphp/about |
 | about/us | about.php | AboutController#us | about/us.tpl.php | http://localhost/iphp/about/us |
