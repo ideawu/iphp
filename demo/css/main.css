@@ -1,0 +1,37 @@
+body, button, input, select, textarea {
+	margin-top: 60px;
+	font: 14px/1.5 Arial;
+	color: #333;
+}
+h1{
+	font-size: 190%;
+	font-weight: bold;
+}
+h2{
+	font-size: 160%;
+	font-weight: bold;
+}
+h3{
+	font-size: 120%;
+	font-weight: bold;
+}
+h4{
+	font-size: 100%;
+	font-weight: bold;
+}
+
+.container{
+	width: 880px;
+}
+.navbar{
+}
+.navbar .divider-vertical {
+	background-color: #222222;
+	border-right: 1px solid #333333;
+	height: 50px;
+	overflow: hidden;
+	width: 1px;
+}
+.footer{
+	text-align: center;
+}
