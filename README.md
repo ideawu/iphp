@@ -29,7 +29,7 @@
 		try_files $uri $uri/ /my/index.php?$args;
 	}
 
-不过, 基于安全等考虑, 你还需要配置更多的东西, 具体参考附带的 `demoapp/config/nginx.conf` 模板.
+不过, 基于安全等考虑, 你还需要配置更多的东西, 具体参考附带的 `demo/app/config/nginx.conf` 模板.
 
 	location / {
 		location ~ /(app|logs)/ {
