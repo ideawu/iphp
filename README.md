@@ -13,13 +13,43 @@
 	server.sh
 	index.php
 
+# Nginx 配置
+
+在已配置了 PHP 的情况下, 你只需要简单添加下面的内容到你的 nginx.conf 里, 然后重启 nginx 即可.
+
+	location / {
+		try_files $uri $uri/ /index.php?$args;
+	}
+
+这个配置表示以 `/` 开头的请求都尝试交给 /index.php 处理, 如果请求不对应某个文件(可能产生 404)的话.
+
+如果想把你的项目放在 `/my` 目录下, 那么配置文件就是这样:
+
+	location /my/ {
+		try_files $uri $uri/ /my/index.php?$args;
+	}
+
+不过, 基于安全等考虑, 你还需要配置更多的东西, 具体参考附带的 `demoapp/config/nginx.conf` 模板.
+
+	location / {
+		location ~ /(app|logs)/ {
+			deny all;
+		}
+		location ~ \.(sh|sql|conf|key|crt) {
+			deny all;
+		}
+		location ~ \.(gif|png|jpg|ico|svg|css|js|ttf|woff|eot)$ {
+		}
+		try_files $uri $uri/ /index.php?$args;
+	}
+
 # URL 路由
 
 ## 路由规则
 
-	URL Path => Controller + View
+	Project URL Path => Controller + View
 
-路由规则用于将一个 URL, 转变为某一个控制器类(Controoler)的某个实例方法(Action)的执行, 以及某一个视图文件的渲染(View).
+路由规则用于将一个 URL 路径, 转变为某一个控制器类(Controoler)的某个实例方法(Action)的执行, 以及某一个视图文件的渲染(View). 这个 URL 路径是相对路径, 相对项目的首页, 如项目的首页是 `/my/`, 那么 `/my/a/b/c` 的 URL 路径便是 `a/b/c`.
 
 ### 例子
 
