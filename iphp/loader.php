@@ -56,7 +56,16 @@ function load_controller($base, $action){
 		$controller = ucfirst($ps[count($ps) - 1]);
 		$cls = "{$controller}Controller";
 		$ins = new $cls();
-		if(method_exists($ins, $action)){
+		
+		$found = false;
+		if($action == 'new'){
+			if(method_exists($ins, 'new_') || method_exists($ins, 'create'))){
+				$found = true;
+			}
+		}else if(method_exists($ins, $action)){
+			$found = true;
+		}
+		if($found){
 			Logger::trace("Controller: $file");
 			return $ins;
 		}

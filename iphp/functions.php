@@ -1,13 +1,20 @@
 <?php
 function base_path(){
-	$uri = $_SERVER['REQUEST_URI'];
-	if(($pos = strpos($uri, '?')) !== false){
-		$uri = substr($uri, 0, $pos);
+	static $path = false;
+	if($path === false){
+		$uri = $_SERVER['REQUEST_URI'];
+		if(($pos = strpos($uri, '?')) !== false){
+			$uri = substr($uri, 0, $pos);
+		}
+		$uri = secure_path($uri);
+		if(preg_match('/^(.*)\/(\d+)$/', $uri, $ms)){
+			$uri = $ms[1] . '/view';
+			$_GET['id'] = $ms[2];
+		}
+		$basepath = dirname($_SERVER['SCRIPT_NAME']);
+		$path = substr($uri, strlen($basepath));
+		$path = trim(trim($path), '/');
 	}
-	$uri = secure_path($uri);
-	$basepath = dirname($_SERVER['SCRIPT_NAME']);
-	$path = substr($uri, strlen($basepath));
-	$path = trim(trim($path), '/');
 	return $path;
 }
 
@@ -112,8 +119,12 @@ function _render($name){
 
 function _action($action, $m=null){
 	$params = array();
-	if($m){
-		$params['id'] = $m->id;
+	if($action == 'view'){
+		$action = $m->id;
+	}else{
+		if($m){
+			$params['id'] = $m->id;
+		}
 	}
 	return _url(App::$controller->module . '/' . $action, $params);
 }
