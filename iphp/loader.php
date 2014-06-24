@@ -28,9 +28,13 @@ function include_paths(){
 		}else{
 			$ps = explode('/', $path);
 		}
+		$act = $ps[count($ps) - 1];
+		if($act == 'new'){
+			$act = 'create';
+		}
 		$paths[] = array(
 			'base' => join('/', array_slice($ps, 0, -1)),
-			'action' => $ps[count($ps) - 1],
+			'action' => $act,
 		);
 		$paths[] = array(
 			'base' => join('/', $ps),
@@ -58,11 +62,7 @@ function load_controller($base, $action){
 		$ins = new $cls();
 		
 		$found = false;
-		if($action == 'new'){
-			if(method_exists($ins, 'new_') || method_exists($ins, 'create')){
-				$found = true;
-			}
-		}else if(method_exists($ins, $action)){
+		if(method_exists($ins, $action)){
 			$found = true;
 		}
 		if($found){

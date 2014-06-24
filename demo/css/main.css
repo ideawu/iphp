@@ -1,7 +1,9 @@
 body, button, input, select, textarea {
-	margin-top: 60px;
 	font: 14px/1.5 Arial;
 	color: #333;
+}
+body{
+	margin-top: 40px;
 }
 h1{
 	font-size: 190%;

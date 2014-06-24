@@ -67,6 +67,20 @@ function _view(){
 	include($file);
 }
 
+function _widget($name, $params=array()){
+	foreach(App::$controller->view_path as $view_path){
+		$dir = APP_PATH . "/$view_path/" . App::$controller->module;
+		$file = $dir . "/$name.tpl.php";
+		if(file_exists($file)){
+			foreach($params as $k=>$v){
+				$$k = $v;
+			}
+			include($file);
+			return;
+		}
+	}
+}
+
 function _redirect($url, $params=array()){
 	App::$controller->layout = false;
 	App::$finish = true;
@@ -74,7 +88,7 @@ function _redirect($url, $params=array()){
 	header("Location: $url");
 }
 
-function _url($url, $params=array()){
+function _url($url='', $params=array()){
 	$url = Html::link($url, $params);
 	return $url;
 }
@@ -99,20 +113,6 @@ function _kvs($arr_arr, $k_attr, $v_attr){
 	return $kvs;
 }
 
-function _widget($name, $params=array()){
-	foreach(App::$controller->view_path as $view_path){
-		$dir = APP_PATH . "/$view_path/" . App::$controller->module;
-		$file = $dir . "/$name.tpl.php";
-		if(file_exists($file)){
-			foreach($params as $k=>$v){
-				$$k = $v;
-			}
-			include($file);
-			return;
-		}
-	}
-}
-
 function _render($name){
 	App::$controller->action = $name;
 }
@@ -130,7 +130,7 @@ function _action($action, $m=null){
 }
 
 function _new_url(){
-	return _action('create');
+	return _action('new');
 }
 
 function _save_url(){
