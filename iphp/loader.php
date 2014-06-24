@@ -59,7 +59,7 @@ function load_controller($base, $action){
 		
 		$found = false;
 		if($action == 'new'){
-			if(method_exists($ins, 'new_') || method_exists($ins, 'create'))){
+			if(method_exists($ins, 'new_') || method_exists($ins, 'create')){
 				$found = true;
 			}
 		}else if(method_exists($ins, $action)){
