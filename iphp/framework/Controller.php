@@ -14,27 +14,27 @@ class Controller
 	}
 	
 	function _new_url(){
-		return _url($this->module . '/create');
+		return _action('new', null, $this->module);
 	}
 	
 	function _list_url(){
-		return _url($this->module . '');
+		return _action('list', null, $this->module);
 	}
 	
 	function _save_url(){
-		return _url($this->module . '/save');
+		return _action('save', null, $this->module);
 	}
 	
 	function _update_url(){
-		return _url($this->module . '/update');
+		return _action('update', null, $this->module);
 	}
 	
 	function _view_url($m){
-		return _url($this->module . '/view', array('id'=>$m->id));
+		return _action('view', $m, $this->module);
 	}
 	
 	function _edit_url($m){
-		return _url($this->module . '/edit', array('id'=>$m->id));
+		return _action('edit', $m, $this->module);
 	}
 }
 

@@ -63,6 +63,24 @@ HTML;
 HTML;
 	}
 	
+	function textarea($name, $label=false, $placeholder='', $tag_attrs=array()){
+		$id = "input_$name";
+		$field = "form[$name]";
+		$val = htmlspecialchars($this->m->$name);
+		$tags = '';
+		foreach($tag_attrs as $k=>$v){
+			$tags .= " $k=\"$v\"";
+		}
+		$this->html .= <<<HTML
+<div class="form-group">
+	<label for="$id" class="col-sm-2 control-label">$label</label>
+	<div class="col-sm-10">
+		<textarea class="form-control" name="$field" id="$id"$tags>$val</textarea>
+	</div>
+</div>\n
+HTML;
+	}
+	
 	function submit($text='Submit'){
 		$this->html .= <<<HTML
 <div class="form-group">

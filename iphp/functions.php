@@ -117,16 +117,23 @@ function _render($name){
 	App::$controller->action = $name;
 }
 
-function _action($action, $m=null){
+function _action($action, $m=null, $module=null){
 	$params = array();
 	if($action == 'view'){
 		$action = $m->id;
+	}else if($action == 'list'){
+		$action = '';
 	}else{
 		if($m){
 			$params['id'] = $m->id;
 		}
 	}
-	return _url(App::$controller->module . '/' . $action, $params);
+	$mod = $module? $module : App::$controller->module;
+	if($action){
+		return _url($mod . '/' . $action, $params);
+	}else{
+		return _url($mod, $params);
+	}
 }
 
 function _new_url(){
@@ -138,7 +145,7 @@ function _save_url(){
 }
 
 function _list_url(){
-	return _action('');
+	return _action('list');
 }
 
 function _view_url($m){
