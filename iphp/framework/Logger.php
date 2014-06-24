@@ -22,7 +22,7 @@ class Logger{
 		throw new Exception("Static class");
 	}
 
-	public function init($config=array()){
+	static function init($config=array()){
 		if(!isset($config['level'])){
 			self::$level = 0;
 		}else if($config['level'] == '*' || strcasecmp($config['level'], 'all') === 0){
@@ -59,7 +59,7 @@ class Logger{
 		self::$config = $config;
 	}
 
-	private function write($level, $msg){
+	private static function write($level, $msg){
 		if($level > self::$level){
 			return;
 		}
@@ -78,7 +78,7 @@ class Logger{
 		}
 	}
 
-	private function write_file($log){
+	private static function write_file($log){
 		$filename = null;
 		foreach(self::$level_map as $level=>$name){
 			if($log->level <= $level && isset(self::$config['files'][$name])){
@@ -113,31 +113,31 @@ class Logger{
 		}
 	}
 
-	public function trace($msg){
+	static function trace($msg){
 		self::write(6, $msg);
 	}
 
-	public function debug($msg){
+	static function debug($msg){
 		self::write(5, $msg);
 	}
 
-	public function info($msg){
+	static function info($msg){
 		self::write(4, $msg);
 	}
 
-	public function warn($msg){
+	static function warn($msg){
 		self::write(3, $msg);
 	}
 
-	public function error($msg){
+	static function error($msg){
 		self::write(2, $msg);
 	}
 
-	public function fatal($msg){
+	static function fatal($msg){
 		self::write(1, $msg);
 	}
 
-	public function dump(){
+	static function dump(){
 		if(!(self::$dump & self::DUMP_HTML)){
 			return;
 		}
