@@ -4,15 +4,15 @@ include(dirname(__FILE__) . '/Mysql.php');
 class Db{
 	private static $config = array();
 
-	public function __construct(){
+	function __construct(){
 		throw new Exception("Static class");
 	}
 
-	public function init($config=array()){
+	static function init($config=array()){
 		self::$config = $config;
 	}
 
-	public static function instance(){
+	static function instance(){
 		static $db = null;
 		if($db === null){
 			$db = new Mysql(self::$config);
