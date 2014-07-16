@@ -44,4 +44,8 @@ class Db{
 			return 0;
 		}
 	}
+	
+	static function last_insert_id(){
+		return self::instance()->last_insert_id();
+	}
 }
