@@ -21,14 +21,27 @@ class Db{
 	}
 	
 	static function begin(){
-		self::instance()->begin();
+		return self::instance()->begin();
 	}
 	
 	static function commit(){
-		self::instance()->commit();
+		return self::instance()->commit();
 	}
 	
 	static function rollback(){
-		self::instance()->rollback();
+		return self::instance()->rollback();
+	}
+	
+	static function query($sql){
+		return self::instance()->query($sql);
+	}
+	
+	static function get_num($sql){
+		$result = self::query($sql);
+		if($row = mysql_fetch_array($result)){
+			return (int)$row[0];
+		}else{
+			return 0;
+		}
 	}
 }
