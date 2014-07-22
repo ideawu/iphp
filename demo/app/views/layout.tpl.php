@@ -18,22 +18,20 @@
 		<div class="navbar-header">
 			<a class="navbar-brand" href="http://www.ideawu.com/iphp/">iphp</a>
 		</div>
-		<div class="navbar-collapse collapse">
-			<ul class="nav navbar-nav">
-				<li class="divider-vertical"></li>
-				<li class="active">
-					<a href="<?=_url('/')?>">
-						<i class="glyphicon glyphicon-home"></i> 首页
-					</a>
-				</li>
-				<li class="divider-vertical"></li>
-				<li>
-					<a href="https://github.com/ideawu/iphp">
-						<i class="glyphicon glyphicon-share-alt"></i> GitHub
-					</a>
-				</li>
-			</ul>
-		</div><!--/.nav-collapse -->
+		<ul class="nav navbar-nav">
+			<li class="divider-vertical"></li>
+			<li class="active">
+				<a href="<?=_url('/')?>">
+					<i class="glyphicon glyphicon-home"></i> 首页
+				</a>
+			</li>
+			<li class="divider-vertical"></li>
+			<li>
+				<a href="https://github.com/ideawu/iphp">
+					<i class="glyphicon glyphicon-share-alt"></i> GitHub
+				</a>
+			</li>
+		</ul>
 	</div>
 </div>
 

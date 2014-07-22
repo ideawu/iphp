@@ -4,8 +4,10 @@ class App{
 	static $context;
 	static $controller;
 	static $finish = false;
+	static $config = array();
 	
 	static function init($config){
+		self::$config = $config;
 		self::$env = $config['env'];
 		self::$context = new stdClass();
 	}
