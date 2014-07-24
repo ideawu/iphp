@@ -48,4 +48,9 @@ class Db{
 	static function last_insert_id(){
 		return self::instance()->last_insert_id();
 	}
+	
+	static function update($sql){
+		self::query($sql);
+		return self::instance()->affected_rows();
+	}
 }

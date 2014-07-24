@@ -44,6 +44,10 @@ class Mysql{
 		$this->query_list[] = $time . ' ' . $sql;
 		return $result;
 	}
+	
+	function affected_rows(){
+		return mysql_affected_rows($this->conn);
+	}
 
 	/**
 	 * 执行 SQL 语句, 返回结果的第一条记录(是一个对象).
