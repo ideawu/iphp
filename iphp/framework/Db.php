@@ -53,4 +53,8 @@ class Db{
 		self::query($sql);
 		return self::instance()->affected_rows();
 	}
+
+	static function __callStatic($cmd, $params=array()){
+		return call_user_func_array(array(self::instance(), $cmd), $params);
+	}
 }
