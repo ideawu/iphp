@@ -43,6 +43,9 @@
 		try_files $uri $uri/ /index.php?$args;
 	}
 
+__注意: 如果你的 nginx.conf 没有配置 `index index.php;`, 请加上.__
+
+
 # URL 路由
 
 ## 路由规则
