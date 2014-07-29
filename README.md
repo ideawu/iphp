@@ -43,16 +43,6 @@
 		try_files $uri $uri/ /index.php?$args;
 	}
 
-# PHP 配置(php.ini)
-
-__`short_open_tag` 必须启用!__
-
-编辑 php.ini, 查找 `short_open_tag`, 如果没有, 则加入下面一行, 如果有, 修改为
-
-	short_open_tag = On
-
-注意, 行的前面不要有分号或者其它字符!
-
 # URL 路由
 
 ## 路由规则
