@@ -145,5 +145,18 @@ class Model
 		}
 		return null;
 	}
+	
+	static function delete($id){
+		return self::db()->remove(self::table(), $id);
+	}
+	
+	static function deleteByWhere($where){
+		$table = self::table();
+		$sql = "delete from $table where 1";
+		if($where){
+			$sql .= " and $where";
+		}
+		return self::db()->query($sql);
+	}
 }
 
