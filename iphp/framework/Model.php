@@ -137,5 +137,13 @@ class Model
 		}
 		return $ret;
 	}
+	
+	static function findOne($where='', $order=''){
+		$rs = self::find(0, 1, $where, $order);
+		if($rs){
+			return $rs[0];
+		}
+		return null;
+	}
 }
 
