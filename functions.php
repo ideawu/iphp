@@ -70,15 +70,16 @@ function _view(){
 }
 
 function _widget($name, $params=array()){
+	$sub_path = array(App::$controller->module . '/', '');
 	foreach(App::$controller->view_path as $view_path){
-		$dir = APP_PATH . "/$view_path/" . App::$controller->module;
-		$file = $dir . "/$name.tpl.php";
-		if(file_exists($file)){
-			foreach($params as $k=>$v){
-				$$k = $v;
+		foreach($sub_path as $dir){
+			$dir = APP_PATH . "/$view_path/$dir";
+			$file = $dir . "$name.tpl.php";
+			if(file_exists($file)){
+				extract($params);
+				include($file);
+				return;
 			}
-			include($file);
-			return;
 		}
 	}
 }
