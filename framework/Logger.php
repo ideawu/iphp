@@ -110,6 +110,7 @@ class Logger{
 
 			$line = sprintf("%s [%-5s] [%s] [%s:%s] %s\n", $time, $level, $cip, $c_file, $c_line, $msg);
 			file_put_contents($filename, $line, FILE_APPEND);
+			@chmod($filename, 0666);
 		}
 	}
 

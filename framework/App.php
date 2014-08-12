@@ -6,15 +6,27 @@ class App{
 	static $finish = false;
 	static $config = array();
 	
-	static function init($config){
+	static function init(){
+		$config_file = APP_PATH . '/config/config.php';
+		if(!file_exists($config_file)){
+			throw new Exception("No config file");
+		}
+		$config = include($config_file);
+
 		self::$config = $config;
 		self::$env = $config['env'];
 		self::$context = new stdClass();
+
+		Logger::init($config['logger']);
+		if($config['db']){
+			Db::init($config['db']);
+		}
 	}
 	
 	static function run(){
+		App::init();
 		try{
-			return self::_run();
+			return self::web();
 		}catch(Exception $e){
 			if($e->getCode() == 404){
 				header('Content-Type: text/html; charset=utf-8', true, 404);
@@ -46,18 +58,7 @@ class App{
 		echo '</body></html>';
 	}
 
-	static function _run(){
-		$config_file = APP_PATH . '/config/config.php';
-		if(!file_exists($config_file)){
-			throw new Exception("No config file");
-		}
-		$config = include($config_file);
-		App::init($config);
-		Logger::init($config['logger']);
-		if($config['db']){
-			Db::init($config['db']);
-		}
-
+	static function web(){
 		$route = route();
 		list($base, $controller, $action) = $route;
 		App::$controller = $controller;
@@ -79,5 +80,4 @@ class App{
 			}
 		}
 	}
-
 }
