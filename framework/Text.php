@@ -5,9 +5,9 @@ class Text
 		return json_decode($str, $assoc);
 	}
 	
-	static function json_encode($input){
+	static function json_encode($input, $opt=0){
 		if(defined('JSON_UNESCAPED_UNICODE')){
-			return json_encode($input, JSON_UNESCAPED_UNICODE);
+			return json_encode($input, JSON_UNESCAPED_UNICODE | $opt);
 		}
 		if(is_string($input)){
 			$text = $input;

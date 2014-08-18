@@ -101,6 +101,7 @@ function _image($url){
 	return "<img src=\"$url\" />";
 }
 
+// 从数组列表中, 使用 k_attr 和 v_attr 指定的字段, 组成一个关联数组.
 function _kvs($arr_arr, $k_attr, $v_attr){
 	$kvs = array();
 	foreach($arr_arr as $arr){
@@ -120,14 +121,24 @@ function _render($name){
 	App::$controller->action = $name;
 }
 
+/**
+ * 用于生成指向 module#action 的 URL
+ * @param string action 动作的名字
+ * @param mixed m Model 对象的实例, 或者是参数数组
+ * @param string module 如果不指定, 则为当前的 controller
+ */
 function _action($action, $m=null, $module=null){
-	$params = array();
+	if(is_array($m)){
+		$params = $m;
+	}else{
+		$params = array();
+	}
 	if($action == 'view'){
 		$action = $m->id;
 	}else if($action == 'list'){
 		$action = '';
 	}else{
-		if($m){
+		if(is_object($m)){
 			$params['id'] = $m->id;
 		}
 	}
