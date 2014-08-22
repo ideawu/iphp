@@ -24,17 +24,77 @@ class App{
 	}
 	
 	static function run(){
+		$code = 1;
+		$msg = '';
+		$data = null;
+
 		App::init();
 		try{
-			return self::web();
+			$data = self::execute();
+		}catch(AppBreakException $e){
+			//
 		}catch(Exception $e){
-			if($e->getCode() == 404){
-				header('Content-Type: text/html; charset=utf-8', true, 404);
+			if(App::$controller && App::$controller->is_ajax){
+				$code = $e->getCode();
+				$msg = $e->getMessage();
+				if(!strlen($msg)){
+					$msg = 'error';
+				}
 			}else{
-				header('Content-Type: text/html; charset=utf-8', true, 500);
+				if($e->getCode() == 404){
+					header('Content-Type: text/html; charset=utf-8', true, 404);
+				}else{
+					header('Content-Type: text/html; charset=utf-8', true, 500);
+				}
+				self::print_error($e);
+				return;
 			}
-			self::print_error($e);
 		}
+		
+		if(App::$controller && App::$controller->is_ajax){
+			$resp = array(
+				'code' => $code,
+				'message' => $msg,
+				'data' => $data,
+			);
+			if(defined('JSON_UNESCAPED_UNICODE')){
+				$json = json_encode($resp, JSON_UNESCAPED_UNICODE);
+			}else{
+				$json = json_encode($resp);
+			}
+			// TODO: JSONP
+			echo $json;
+		}else{
+			$layout = find_layout_file();
+			if($layout){
+				$params = array();
+				foreach(App::$context as $k=>$v){
+					$params[$k] = $v;
+				}
+				extract($params);
+				include($layout);
+			}else{
+				_view();
+			}
+		}
+	}
+
+	private static function execute(){
+		$route = route();
+		list($base, $controller, $action) = $route;
+		App::$controller = $controller;
+
+		$controller->init(App::$context);
+		if(self::$finish){
+			return null;
+		}
+		$ret = $controller->$action(App::$context);
+		return $ret;
+	}
+	
+	static function _break(){
+		self::$finish = true;
+		throw new AppBreakException();
 	}
 	
 	static function print_error($e){
@@ -57,27 +117,11 @@ class App{
 			text-align: center;">iphp</p>';
 		echo '</body></html>';
 	}
+}
 
-	static function web(){
-		$route = route();
-		list($base, $controller, $action) = $route;
-		App::$controller = $controller;
-
-		$controller->init(App::$context);
-		if(self::$finish){
-			return;
-		}
-		$ret = $controller->$action(App::$context);
-		if(!$ret){
-			$layout = find_layout_file();
-			if($layout){
-				foreach(App::$context as $k=>$v){
-					$$k = $v;
-				}
-				include($layout);
-			}else{
-				_view();
-			}
-		}
+class AppBreakException extends Exception
+{
+	function __construct($msg, $code=1){
+		parent::__construct($msg, $code);
 	}
 }
