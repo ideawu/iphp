@@ -62,8 +62,13 @@ class App{
 			}else{
 				$json = json_encode($resp);
 			}
-			// TODO: JSONP
+			if(App::$controller->jp){
+				echo App::$controller->jp . '(';
+			}
 			echo $json;
+			if(App::$controller->jp){
+				echo ');';
+			}
 		}else{
 			$layout = find_layout_file();
 			if($layout){
