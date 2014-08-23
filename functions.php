@@ -181,3 +181,7 @@ function _days_from_now($date){
 function _days_until_now($date){
 	return -_days_from_now($date);
 }
+
+function _throw($msg, $code=0){
+	throw new Exception($msg, $code);
+}
