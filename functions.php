@@ -89,6 +89,7 @@ function _redirect($url, $params=array()){
 	App::$finish = true;
 	$url = Html::link($url, $params);
 	header("Location: $url");
+	App::_break();
 }
 
 function _url($url='', $params=array()){
