@@ -21,7 +21,7 @@ class Model
 	}
 
 	function __construct($table_name=null){
-		if($table_name === null && $this->table_name === false){
+		if($table_name === null && static::$table_name === false){
 			$table_name = self::table();
 		}
 		if($table_name){
@@ -37,7 +37,6 @@ class Model
 		}
 		return $this->$name;
 	}
-	static $t = 123;
 
 	static function get($id){
 		$row = self::db()->load(static::table(), $id);
