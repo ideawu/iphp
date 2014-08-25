@@ -8,7 +8,7 @@ class AjaxController extends Controller
 		parent::init($ctx);
 		$this->layout = false;
 		
-		$jp = trim($_GET['_jp']);
+		$jp = trim($_GET['callback']);
 		if(preg_match('/^[a-z0-9_]+$/i', $jp)){
 			$this->jp = $jp;
 		}
