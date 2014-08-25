@@ -32,7 +32,7 @@ class App{
 		try{
 			$data = self::execute();
 		}catch(AppBreakException $e){
-			//
+			return;
 		}catch(Exception $e){
 			if(App::$controller && App::$controller->is_ajax){
 				$code = $e->getCode();
