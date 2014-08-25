@@ -10,6 +10,9 @@ class Controller
 	function init($ctx){
 	}
 	
+	function index($ctx){
+	}
+	
 	function _view($m){
 		_redirect($this->_view_url($m));
 	}
