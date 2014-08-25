@@ -67,6 +67,7 @@ function load_controller($base, $action){
 		
 		$found = false;
 		if(method_exists($ins, $action)){
+			$ins->action = $action;
 			$found = true;
 		}
 		if($found){
