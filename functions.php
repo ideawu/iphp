@@ -70,10 +70,11 @@ function _view(){
 }
 
 function _widget($name, $params=array()){
-	$sub_path = array(App::$controller->module . '/', '');
+	$ps = explode('/', App::$controller->module);
 	foreach(App::$controller->view_path as $view_path){
-		foreach($sub_path as $dir){
-			$dir = APP_PATH . "/$view_path/$dir";
+		for($i=count($ps); $i>=0; $i--){
+			$dir = join('/', array_slice($ps, 0, $i));
+			$dir = APP_PATH . "/$view_path/$dir/";
 			$file = $dir . "$name.tpl.php";
 			if(file_exists($file)){
 				extract($params);
