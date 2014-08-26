@@ -44,7 +44,7 @@ function ip(){
 function _view(){
 	foreach(include_paths() as $path){
 		// 由 Controller 指定模板的名字
-		if(App::$controller->action){
+		if(App::$controller->action && App::$controller->action != 'index'){
 			$action = App::$controller->action;
 		}else{
 			$action = $path['action'];

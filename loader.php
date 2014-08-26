@@ -33,6 +33,10 @@ function include_paths(){
 			$act = 'create';
 		}
 		$paths[] = array(
+			'base' => join('/', array_slice($ps, 0, -1)),
+			'action' => $act,
+		);
+		$paths[] = array(
 			'base' => join('/', $ps),
 			'action' => 'index',
 		);
@@ -40,6 +44,10 @@ function include_paths(){
 			$paths[] = array(
 				'base' => join('/', $ps) . '/index',
 				'action' => 'index',
+			);
+			$paths[] = array(
+				'base' => join('/', array_slice($ps, 0, -1)) . '/index',
+				'action' => $act,
 			);
 		}
 	}
