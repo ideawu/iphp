@@ -104,10 +104,11 @@ class Model
 		$table = self::table();
 		$attrs['id'] = $this->id;
 		self::db()->escape($attrs);
-		self::db()->update($table, $attrs);
+		$ret = self::db()->update($table, $attrs);
 		foreach($attrs as $k=>$v){
 			$this->$k = $v;
 		}
+		return $ret;
 	}
 	
 	static function getBy($field, $val){
