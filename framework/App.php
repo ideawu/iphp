@@ -62,12 +62,14 @@ class App{
 			}else{
 				$json = json_encode($resp);
 			}
-			if(App::$controller->jp){
-				echo App::$controller->jp . '(';
+			$jp = App::$controller->jp;
+			if(!preg_match('/^[a-z0-9_]+$/i', $jp)){
+				$jp = false;
 			}
-			echo $json;
-			if(App::$controller->jp){
-				echo ');';
+			if($jp){
+				echo "$jp($json);";
+			}else{
+				echo $json;
 			}
 		}else{
 			$layout = find_layout_file();
@@ -103,30 +105,33 @@ class App{
 	}
 	
 	static function print_error($e){
-		echo '<html><head>';
-		echo '<meta charset="UTF-8">';
-		echo "<title>" . $e->getMessage() . "</title>\n";
-		echo "<style>body{font-size: 14px; font-family: monospace;}</style>\n";
-		echo "</head><body>\n";
-		echo "<h1 style=\"text-align: center;\">" . $e->getMessage() . "</h1>";
+		$msg = htmlspecialchars($e->getMessage());
+		$html = '';
+		$html .= '<html><head>';
+		$html .= '<meta charset="UTF-8">';
+		$html .= "<title>$msg</title>\n";
+		$html .= "<style>body{font-size: 14px; font-family: monospace;}</style>\n";
+		$html .= "</head><body>\n";
+		$html .= "<h1 style=\"text-align: center;\">$msg</h1>";
 		if(self::$env == 'dev'){
 			$ts = $e->getTrace();
 			foreach($ts as $t){
-				echo "{$t['file']}:{$t['line']} {$t['function']}()<br/>\n";
+				$html .= "{$t['file']}:{$t['line']} {$t['function']}()<br/>\n";
 			}
 		}
-		echo '<p style="
+		$html .= '<p style="
 			margin-top: 20px;
 			padding-top: 10px;
 			border-top: 1px solid #ccc;
 			text-align: center;">iphp</p>';
-		echo '</body></html>';
+		$html .= '</body></html>';
+		echo "$html\n";
 	}
 }
 
 class AppBreakException extends Exception
 {
-	function __construct($msg, $code=1){
+	function __construct($msg='', $code=1){
 		parent::__construct($msg, $code);
 	}
 }

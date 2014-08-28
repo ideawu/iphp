@@ -21,7 +21,7 @@ function base_path(){
 function secure_path($path){
 	$path = preg_replace('/[\.]+/', '.', $path);
 	$path = preg_replace('/[\/]+/', '/', $path);
-	$path = str_replace('./', '', $path);
+	$path = str_replace(array('./', '\'', '"', '<', '>'), '', $path);
 	return $path;
 }
 
