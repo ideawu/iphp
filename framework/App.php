@@ -102,6 +102,8 @@ class App{
 		$code = $e->getCode() === 0? 500 : $e->getCode();
 		if($code == 404){
 			header('Content-Type: text/html; charset=utf-8', true, 404);
+		}else if($code == 200){
+			//
 		}else{
 			header('Content-Type: text/html; charset=utf-8', true, 500);
 		}
@@ -116,7 +118,11 @@ class App{
 			foreach($pages as $p){
 				$file = APP_PATH . "/$view_path/_error/{$p}.tpl.php";
 				if(file_exists($file)){
-					$params = array('e'=>$e);
+					$params = array();
+					foreach(App::$context as $k=>$v){
+						$params[$k] = $v;
+					}
+					$params['_e'] = $e;
 					extract($params);
 					include($file);
 					return;
