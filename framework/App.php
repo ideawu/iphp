@@ -41,13 +41,7 @@ class App{
 					$msg = 'error';
 				}
 			}else{
-				if($e->getCode() == 404){
-					header('Content-Type: text/html; charset=utf-8', true, 404);
-				}else{
-					header('Content-Type: text/html; charset=utf-8', true, 500);
-				}
-				self::print_error($e);
-				return;
+				return self::error_handle($e);
 			}
 		}
 		
@@ -104,7 +98,32 @@ class App{
 		throw new AppBreakException();
 	}
 	
-	static function print_error($e){
+	static function error_handle($e){
+		$code = $e->getCode() === 0? 500 : $e->getCode();
+		if($code == 404){
+			header('Content-Type: text/html; charset=utf-8', true, 404);
+		}else{
+			header('Content-Type: text/html; charset=utf-8', true, 500);
+		}
+
+		$pages = array($code, 'default');
+		if(App::$controller){
+			$view_path_list = App::$controller->view_path;
+		}else{
+			$view_path_list = array('views');
+		}
+		foreach($view_path_list as $view_path){
+			foreach($pages as $p){
+				$file = APP_PATH . "/$view_path/_error/{$p}.tpl.php";
+				if(file_exists($file)){
+					$params = array('e'=>$e);
+					extract($params);
+					include($file);
+					return;
+				}
+			}
+		}
+		
 		$msg = htmlspecialchars($e->getMessage());
 		$html = '';
 		$html .= '<html><head>';

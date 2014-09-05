@@ -97,7 +97,11 @@ class Model
 		$table = self::table();
 		self::db()->escape($attrs);
 		self::db()->save($table, $attrs);
-		return self::get($attrs['id']);
+		$ret = self::get($attrs['id']);
+		if(!$ret){
+			throw new Exception("无法写入数据库");
+		}
+		return $ret;
 	}
 	
 	function update($attrs){
