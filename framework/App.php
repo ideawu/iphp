@@ -15,7 +15,8 @@ class App{
 
 		self::$config = $config;
 		self::$env = $config['env'];
-		self::$context = new stdClass();
+		#self::$context = new stdClass();
+		self::$context = new Context();
 
 		Logger::init($config['logger']);
 		if($config['db']){
@@ -68,10 +69,7 @@ class App{
 		}else{
 			$layout = find_layout_file();
 			if($layout){
-				$params = array();
-				foreach(App::$context as $k=>$v){
-					$params[$k] = $v;
-				}
+				$params = App::$context->as_array();
 				extract($params);
 				include($layout);
 			}else{
@@ -98,6 +96,42 @@ class App{
 		throw new AppBreakException();
 	}
 	
+	private static function find_error_page($code){
+		$pages = array($code, 'default');
+		if(App::$controller){
+			$view_path_list = App::$controller->view_path;
+		}else{
+			$view_path_list = array('views');
+		}
+
+		$path = base_path();
+		foreach($view_path_list as $view_path){
+			$ps = explode('/', $path);
+			while(1){
+				$base = join('/', $ps);
+				if($ps){
+					$dir = APP_PATH . "/$view_path/$base";
+				}else{
+					$dir = APP_PATH . "/$view_path";
+				}
+
+				foreach($pages as $page){
+					$file = "$dir/_error/{$page}.tpl.php";
+					#echo $file . "\n<br/>";
+					if(file_exists($file)){
+						return $file;
+					}
+				}
+				
+				if(!$ps){
+					break;
+				}
+				array_pop($ps);
+			}
+		}
+		return false;
+	}
+	
 	static function error_handle($e){
 		$code = $e->getCode() === 0? 500 : $e->getCode();
 		if($code == 404){
@@ -107,27 +141,13 @@ class App{
 		}else{
 			header('Content-Type: text/html; charset=utf-8', true, 500);
 		}
-
-		$pages = array($code, 'default');
-		if(App::$controller){
-			$view_path_list = App::$controller->view_path;
-		}else{
-			$view_path_list = array('views');
-		}
-		foreach($view_path_list as $view_path){
-			foreach($pages as $p){
-				$file = APP_PATH . "/$view_path/_error/{$p}.tpl.php";
-				if(file_exists($file)){
-					$params = array();
-					foreach(App::$context as $k=>$v){
-						$params[$k] = $v;
-					}
-					$params['_e'] = $e;
-					extract($params);
-					include($file);
-					return;
-				}
-			}
+		$error_page = self::find_error_page($code);
+		if($error_page !== false){
+			$params = App::$context->as_array();
+			$params['_e'] = $e;
+			extract($params);
+			include($error_page);
+			return;
 		}
 		
 		$msg = htmlspecialchars($e->getMessage());

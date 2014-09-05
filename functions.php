@@ -61,11 +61,9 @@ function _view(){
 		return false;
 	}
 	Logger::trace("View $file");
-	$arr = array();
-	foreach(App::$context as $k=>$v){
-		$arr[$k] = $v;
-	}
-	extract($arr);
+
+	$params = App::$context->as_array();
+	extract($params);
 	include($file);
 }
 
