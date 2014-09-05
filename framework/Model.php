@@ -91,9 +91,6 @@ class Model
 	}
 	
 	static function save($attrs){
-		if(!$attrs['id']){
-			unset($attrs['id']);
-		}
 		$table = self::table();
 		self::db()->escape($attrs);
 		self::db()->save($table, $attrs);

@@ -160,9 +160,13 @@ class Mysql{
 		$sql  = "insert into `{$table}` set $sqlA";
 		$ret = $this->query($sql);
 		if(is_object($row)){
-			$row->id = $this->last_insert_id();
+			if(!$row->id){
+				$row->id = $this->last_insert_id();
+			}
 		}else if(is_array($row)){
-			$row['id'] = $this->last_insert_id();
+			if(!$row['id']){
+				$row['id'] = $this->last_insert_id();
+			}
 		}
 		return $ret;
 	}
