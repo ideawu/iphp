@@ -62,6 +62,7 @@ function _widget($name, $params=array()){
 			$dir = APP_PATH . "/$view_path/$dir/";
 			$file = $dir . "$name.tpl.php";
 			if(file_exists($file)){
+				$params = $params + App::$context->as_array();
 				extract($params);
 				include($file);
 				return;
