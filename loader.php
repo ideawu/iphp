@@ -126,16 +126,25 @@ function find_layout_file(){
 	return false;
 }
 
-function find_view_file($base, $action){
-	foreach(App::$controller->view_path as $view_path){
-		$dir = rtrim(APP_PATH . "/$view_path/$base", '/');
-		if($action == 'index'){
-			$file = $dir . '.tpl.php';
+function find_view_file(){
+	foreach(include_paths() as $path){
+		// 由 Controller 指定模板的名字
+		if(App::$controller->action && App::$controller->action != 'index'){
+			$action = App::$controller->action;
 		}else{
-			$file = $dir . "/$action.tpl.php";
+			$action = $path['action'];
 		}
-		if(file_exists($file)){
-			return $file;
+		$base = $path['base'];
+		foreach(App::$controller->view_path as $view_path){
+			$dir = rtrim(APP_PATH . "/$view_path/$base", '/');
+			if($action == 'index'){
+				$file = $dir . '.tpl.php';
+			}else{
+				$file = $dir . "/$action.tpl.php";
+			}
+			if(file_exists($file)){
+				return $file;
+			}
 		}
 	}
 	return false;

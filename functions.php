@@ -42,22 +42,9 @@ function ip(){
 }
 
 function _view(){
-	foreach(include_paths() as $path){
-		// 由 Controller 指定模板的名字
-		if(App::$controller->action && App::$controller->action != 'index'){
-			$action = App::$controller->action;
-		}else{
-			$action = $path['action'];
-		}
-		$file = find_view_file($path['base'], $action);
-		if($file){
-			break;
-		}
-	}
-
+	$file = find_view_file();
 	if(!$file){
-		$path = base_path();
-		Logger::trace("No view for $path!");
+		Logger::trace("No view for " . base_path());
 		return false;
 	}
 	Logger::trace("View $file");
