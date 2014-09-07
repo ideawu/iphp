@@ -101,6 +101,10 @@ class Mysql{
 	 * 执行一条带有结果集计数的 count SQL 语句, 并返该计数.
 	 */
 	public function count($sql){
+		return $this->get_num($sql);
+	}
+	
+	public function get_num($sql){
 		$result = $this->query($sql);
 		if($row = mysql_fetch_array($result)){
 			return (int)$row[0];
