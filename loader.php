@@ -9,13 +9,17 @@ $AUTOLOAD_PATH =  array(
 	APP_PATH . '/classes',
 );
 
-function __autoload($class_name){
+function __autoload($cls){
 	global $AUTOLOAD_PATH;
 	foreach($AUTOLOAD_PATH as $dir){
-		$file = $dir . '/' . $class_name . '.php';
+		$file = $dir . '/' . $cls . '.php';
 		if(file_exists($file)){
 			require_once($file);
+			break;
 		}
+	}
+	if(!class_exists($cls)){
+		throw new Exception("Class $cls not found!");
 	}
 }
 
@@ -63,6 +67,9 @@ function load_controller($base, $action){
 		$ps = explode('/', $base);
 		$controller = ucfirst($ps[count($ps) - 1]);
 		$cls = "{$controller}Controller";
+		if(!class_exists($cls)){
+			throw new Exception("Controller $cls not found!");
+		}
 		$ins = new $cls();
 		
 		$found = false;
