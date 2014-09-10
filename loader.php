@@ -18,9 +18,10 @@ function __autoload($cls){
 			break;
 		}
 	}
-	if(!class_exists($cls)){
-		throw new Exception("Class $cls not found!");
-	}
+	// 有很多代码会使用 class_exists(), 需要和它们兼容, 所以不能在这里 throw
+#	if(!class_exists($cls, false)){
+#		throw new Exception("Class $cls not found!");
+#	}
 }
 
 function include_paths(){
