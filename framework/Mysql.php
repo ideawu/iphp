@@ -141,6 +141,7 @@ class Mysql{
 	 * @param string $field 字段名, 默认为'id'.
 	 */
 	function load($table, $id, $field='id'){
+		$id = $this->escape($id);
 		$sql = "select * from `{$table}` where `{$field}`='{$id}'";
 		$row = $this->get($sql);
 		return $row;
@@ -151,6 +152,7 @@ class Mysql{
 	 * @param object $row
 	 */
 	function save($table, &$row){
+		$row = $this->escape($row);
 		$sqlA = array();
 		foreach($row as $k=>$v){
 			if($v === NULL){
@@ -180,6 +182,7 @@ class Mysql{
 	 * @param object $row
 	 */
 	function replace($table, &$row){
+		$row = $this->escape($row);
 		$sqlA = array();
 		foreach($row as $k=>$v){
 			if($v === NULL){
@@ -207,6 +210,7 @@ class Mysql{
 	 * @param string $field 字段名, 默认为'id'.
 	 */
 	function update($table, &$row, $field='id'){
+		$row = $this->escape($row);
 		$sqlA = array();
 		foreach($row as $k=>$v){
 			if($v === NULL){
@@ -233,6 +237,7 @@ class Mysql{
 	 * @param string $field 字段名, 默认为'id'.
 	 */
 	function remove($table, $id, $field='id'){
+		$id = $this->escape($id);
 		$sql  = "delete from `{$table}` where `{$field}`='{$id}'";
 		return $this->query($sql);
 	}

@@ -92,7 +92,6 @@ class Model
 	
 	static function save($attrs){
 		$table = self::table();
-		self::db()->escape($attrs);
 		self::db()->save($table, $attrs);
 		$ret = self::get($attrs['id']);
 		if(!$ret){
@@ -104,7 +103,6 @@ class Model
 	function update($attrs){
 		$table = self::table();
 		$attrs['id'] = $this->id;
-		self::db()->escape($attrs);
 		$ret = self::db()->update($table, $attrs);
 		foreach($attrs as $k=>$v){
 			$this->$k = $v;
@@ -118,7 +116,6 @@ class Model
 	
 	static function get_by($field, $val){
 		$table = self::table();
-		self::db()->escape($val);
 		$row = self::db()->load($table, $val, $field);
 		if(!$row){
 			return null;
