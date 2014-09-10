@@ -22,6 +22,18 @@ class App{
 		if($config['db']){
 			Db::init($config['db']);
 		}
+
+		if(get_magic_quotes_gpc()){
+			foreach($_GET as $k=>$v){
+				$_GET[$k] = stripslashes($v);
+			}
+			foreach($_POST as $k=>$v){
+				$_POST[$k] = stripslashes($v);
+			}
+			foreach($_COOKIE as $k=>$v){
+				$_COOKIE[$k] = stripslashes($v);
+			}
+		}
 	}
 	
 	static function run(){
