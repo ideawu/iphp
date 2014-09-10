@@ -47,6 +47,7 @@ class App{
 		}catch(AppBreakException $e){
 			return;
 		}catch(Exception $e){
+			Logger::error($e);
 			if(App::$controller && App::$controller->is_ajax){
 				$code = $e->getCode();
 				$msg = $e->getMessage();
