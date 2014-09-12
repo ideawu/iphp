@@ -54,7 +54,6 @@ class App{
 					$msg = 'error';
 				}
 			}else{
-				Logger::error($e);
 				return self::error_handle($e);
 			}
 		}
@@ -148,10 +147,12 @@ class App{
 	static function error_handle($e){
 		$code = $e->getCode() === 0? 500 : $e->getCode();
 		if($code == 404){
+			Logger::trace($e->getMessage());
 			header('Content-Type: text/html; charset=utf-8', true, 404);
 		}else if($code == 200){
 			//
 		}else{
+			Logger::error($e);
 			header('Content-Type: text/html; charset=utf-8', true, 500);
 		}
 		$error_page = self::find_error_page($code);
@@ -191,5 +192,12 @@ class AppBreakException extends Exception
 {
 	function __construct($msg='', $code=1){
 		parent::__construct($msg, $code);
+	}
+}
+
+class App404Exception extends Exception
+{
+	function __construct($msg='404 Not found'){
+		parent::__construct($msg, 404);
 	}
 }
