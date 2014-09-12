@@ -147,12 +147,10 @@ class App{
 	static function error_handle($e){
 		$code = $e->getCode() === 0? 500 : $e->getCode();
 		if($code == 404){
-			Logger::trace($e->getMessage());
 			header('Content-Type: text/html; charset=utf-8', true, 404);
 		}else if($code == 200){
 			//
 		}else{
-			Logger::error($e);
 			header('Content-Type: text/html; charset=utf-8', true, 500);
 		}
 		$error_page = self::find_error_page($code);
