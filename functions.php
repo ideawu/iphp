@@ -74,18 +74,29 @@ function _widget($name, $params=array()){
 function _redirect($url, $params=array()){
 	App::$controller->layout = false;
 	App::$finish = true;
-	$url = Html::link($url, $params);
+	$url = _url($url, $params);
 	header("Location: $url");
 	App::_break();
 }
 
 function _url($url='', $params=array()){
+	if(strpos($url, 'http://') === false && strpos($url, 'https://') === false){
+		$ps = explode('/', $url);
+		$act = $ps[count($ps)-1];
+		if($act == 'view' && isset($params['id'])){
+			$ps[count($ps)-1] = $params['id'];
+			unset($params['id']);
+		}else if($act == 'list'){
+			unset($ps[count($ps)-1]);
+		}
+		$url = join('/', $ps);
+	}
 	$url = Html::link($url, $params);
 	return $url;
 }
 
 function _image($url){
-	$url = Html::link($url);
+	$url = _url($url);
 	return "<img src=\"$url\" />";
 }
 
@@ -118,18 +129,12 @@ function _render($name){
 function _action($action, $m=null, $module=null){
 	if(is_array($m)){
 		$params = $m;
+	}else if(is_object($m)){
+		$params = array('id' => $m->id);
 	}else{
 		$params = array();
 	}
-	if($action == 'view'){
-		$action = $m->id;
-	}else if($action == 'list'){
-		$action = '';
-	}else{
-		if(is_object($m)){
-			$params['id'] = $m->id;
-		}
-	}
+
 	$mod = $module? $module : App::$controller->module;
 	if($action){
 		return _url($mod . '/' . $action, $params);
