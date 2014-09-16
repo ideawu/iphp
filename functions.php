@@ -7,15 +7,52 @@ function base_path(){
 			$uri = substr($uri, 0, $pos);
 		}
 		$uri = secure_path($uri);
+		
+		/*
 		if(preg_match('/^(.*)\/(\d+)$/', $uri, $ms)){
 			$uri = $ms[1] . '/view';
 			$_GET['id'] = $ms[2];
 		}
+		*/
+		// URL rewrite
+		$ps = explode('/', $uri);
+		$np = count($ps);
+		if(preg_match('/^\d+$/', $ps[$np-1])){
+			$_GET['id'] = $ps[$np-1];
+			$ps[$np-1] = 'view';
+		}else if($np >= 2 && preg_match('/^\d+$/', $ps[$np-2])){
+			$_GET['id'] = $ps[$np-2];
+			$act = $ps[$np-1];
+			$ps = array_slice($ps, 0, -2);
+			$ps[] = $act;
+		}
+		$uri = join('/', $ps);
+		
 		$basepath = dirname($_SERVER['SCRIPT_NAME']);
 		$path = substr($uri, strlen($basepath));
 		$path = trim(trim($path), '/');
 	}
 	return $path;
+}
+
+function _url($url='', $params=array()){
+	static $special_actions = array('view', 'edit', 'update');
+	if(strpos($url, 'http://') === false && strpos($url, 'https://') === false){
+		$ps = explode('/', $url);
+		$act = $ps[count($ps)-1];
+		if(isset($params['id']) && in_array($act, $special_actions)){
+			$ps[count($ps)-1] = $params['id'];
+			if($act != 'view'){
+				$ps[count($ps)] = $act;
+			}
+			unset($params['id']);
+		}else if($act == 'list'){
+			unset($ps[count($ps)-1]);
+		}
+		$url = join('/', $ps);
+	}
+	$url = Html::link($url, $params);
+	return $url;
 }
 
 function secure_path($path){
@@ -77,22 +114,6 @@ function _redirect($url, $params=array()){
 	$url = _url($url, $params);
 	header("Location: $url");
 	App::_break();
-}
-
-function _url($url='', $params=array()){
-	if(strpos($url, 'http://') === false && strpos($url, 'https://') === false){
-		$ps = explode('/', $url);
-		$act = $ps[count($ps)-1];
-		if($act == 'view' && isset($params['id'])){
-			$ps[count($ps)-1] = $params['id'];
-			unset($params['id']);
-		}else if($act == 'list'){
-			unset($ps[count($ps)-1]);
-		}
-		$url = join('/', $ps);
-	}
-	$url = Html::link($url, $params);
-	return $url;
 }
 
 function _image($url){
