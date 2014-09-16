@@ -34,6 +34,7 @@ class App{
 				$_COOKIE[$k] = stripslashes($v);
 			}
 		}
+		$_REQUEST = $_GET + $_POST + $_COOKIE;
 	}
 	
 	static function run(){
