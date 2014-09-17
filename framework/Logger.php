@@ -92,8 +92,8 @@ class Logger{
 			list($sec, $usec) = explode('.', $log->time);
 			$usec = substr(sprintf('%03d', $usec), 0, 3);
 			$time = date("Y-m-d H:i:s.{$usec}", $sec);
-			$msg = str_replace(array("\r", "\n", "\t"), array('', '', '\t'), $log->msg);
-			$msg = preg_replace('/ +/', ' ', $msg);
+			$msg = str_replace(array("\r", "\n"), array('', ''), $log->msg);
+			$msg = preg_replace('/\s+/', ' ', $msg);
 
 			if($_SERVER["HTTP_CLIENT_IP"] && $_SERVER["HTTP_CLIENT_IP"]!='unknown'){
 				$cip = $_SERVER["HTTP_CLIENT_IP"];
