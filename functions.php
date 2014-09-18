@@ -37,6 +37,13 @@ function base_path(){
 
 function _url($url='', $params=array()){
 	static $special_actions = array('view', 'edit', 'update');
+	if(is_object($params)){
+		$p = array();
+		if(isset($params->id)){
+			$p['id'] = $params->id;
+		}
+		$params = $p;
+	}
 	if(strpos($url, 'http://') === false && strpos($url, 'https://') === false){
 		$ps = explode('/', $url);
 		$act = $ps[count($ps)-1];
