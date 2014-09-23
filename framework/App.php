@@ -23,7 +23,7 @@ class App{
 			Db::init($config['db']);
 		}
 
-		if(1 || get_magic_quotes_gpc()){
+		if(get_magic_quotes_gpc()){
 			foreach($_GET as $k=>$v){
 				$_GET[$k] = Text::stripslashes($v);
 			}
