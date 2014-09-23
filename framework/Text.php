@@ -190,4 +190,22 @@ class Text
 		}
 		return $text;
 	}
+	
+	static function stripslashes($mixed){
+		if(is_string($mixed)){
+			return stripslashes($mixed);
+		}else if(is_array($mixed)){
+			foreach($mixed as $k=>$v){
+				$mixed[$k] = self::stripslashes($v);
+			}
+			return $mixed;
+		}else if(is_array($mixed)){
+			foreach($mixed as $k=>$v){
+				$mixed->$k = self::stripslashes($v);
+			}
+			return $mixed;
+		}else{
+			return $mixed;
+		}
+	}
 }

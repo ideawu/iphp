@@ -23,15 +23,15 @@ class App{
 			Db::init($config['db']);
 		}
 
-		if(get_magic_quotes_gpc()){
+		if(1 || get_magic_quotes_gpc()){
 			foreach($_GET as $k=>$v){
-				$_GET[$k] = stripslashes($v);
+				$_GET[$k] = Text::stripslashes($v);
 			}
 			foreach($_POST as $k=>$v){
-				$_POST[$k] = stripslashes($v);
+				$_POST[$k] = Text::stripslashes($v);
 			}
 			foreach($_COOKIE as $k=>$v){
-				$_COOKIE[$k] = stripslashes($v);
+				$_COOKIE[$k] = Text::stripslashes($v);
 			}
 		}
 		$_REQUEST = $_GET + $_POST + $_COOKIE;
