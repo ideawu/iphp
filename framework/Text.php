@@ -48,7 +48,24 @@ class Text
 		if($xml){
 			$xml = @json_decode(@json_encode($xml));
 		}
+		if($xml){
+			$xml = self::trim_xml_obj($xml);
+		}
 		return $xml;
+	}
+	
+	private static function trim_xml_obj($obj){
+		foreach($obj as $k=>$v){
+			if(is_object($v)){
+				if(count((array)$v) == 0){
+					$v = '';
+				}else{
+					$v = self::trim_xml_obj($v);
+				}
+			}
+			$obj->$k = $v;
+		}
+		return $obj;
 	}
 	
 	static function xml_to_array($str){
