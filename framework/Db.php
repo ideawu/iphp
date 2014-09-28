@@ -52,7 +52,7 @@ class Db{
 		}else if(is_array($val)){
 			//
 		}else{
-			$val = array();
+			$val = array($val);
 		}
 		$tmp = array();
 		foreach($val as $p){
