@@ -13,6 +13,22 @@
 	server.sh
 	index.php
 
+## 利用 tools/new_app.php 来创建新项目
+
+在你想建立项目的目录底下, 执行:
+
+	php <somewhere>/tools/new_app.php
+
+这是执行效果:
+
+	$APP['NAME']: myfirstapp
+	$APP['DOMAIN']: localhost
+	$APP['PHP_FPM.PORT']: 9000
+	
+	Generate app into: /Users/wuzuyang/Works/iphp/tmp/myfirstapp ...
+	Done!
+
+
 # Nginx 配置
 
 在已配置了 PHP 的情况下, 你只需要简单添加下面的内容到你的 nginx.conf 里, 然后重启 nginx 即可.
