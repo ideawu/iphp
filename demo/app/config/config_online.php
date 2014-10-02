@@ -7,6 +7,7 @@ return array(
 		'level' => 'all', // none/off|(LEVEL)
 		'dump' => 'file', // none|html|file, 可用'|'组合
 		'files' => array( // ALL|(LEVEL)
+			'ALL'	=> "/data/applogs/demo/" . date('Y-m-d') . '.log',
 		),
 	),
 	'db' => array(
