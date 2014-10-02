@@ -1,0 +1,44 @@
+body, button, input, select, textarea {
+	font-size: 14px;
+	font-family: Arial;
+	color: #333;
+}
+body{
+	background: #eee;
+	margin-top: 40px;
+}
+p{
+	margin: 14px 0;
+	line-height: 160%;
+}
+form p{
+	margin: 0;
+}
+h1{
+	font-size: 170%;
+	margin: 18px 0;
+}
+h2{
+	font-size: 150%;
+	margin: 14px 0;
+}
+h3{
+	font-size: 130%;
+}
+h4{
+	font-size: 100%;
+}
+img{
+	max-width: 100%;
+}
+
+.footer{
+	color: #999;
+	font-size: 80%;
+	text-align: center;
+	padding: 15px 0;
+}
+.container{
+	margin: 0 auto;
+	width: 880px;
+}
