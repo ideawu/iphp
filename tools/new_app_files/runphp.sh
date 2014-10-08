@@ -7,7 +7,7 @@ lock_file=/tmp/runphp_lock.`echo $1 | sed 's/\//_/g' | sed 's/^\.*//'`.lock
 
 #echo "locking file: $lock_file"
 
-lockfile -r 1 -1 $lock_file > /dev/null 2>&1
+lockfile -r 50 -1 $lock_file > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
 	$php $php_file
 	rm -f $lock_file
