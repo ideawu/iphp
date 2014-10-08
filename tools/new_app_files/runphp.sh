@@ -16,7 +16,7 @@ else
 	run=`ps aux | grep $php_file | grep -vw 'grep\|sh' | head -n 1 | awk '{print $2}'`
 	echo $run
 	if [ -n "$run" ]; then
-		echo "running"
+		:
 	else
 		echo "$php_file not running, cleanup!"
 		rm -f $lock_file
