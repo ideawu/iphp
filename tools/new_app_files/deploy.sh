@@ -13,6 +13,12 @@ fi
 prj_dir=/data/www/$prj
 dep_dir=/data/deploy_www/$prj.dep.`date +%Y%m%d_%H%M%S`
 
+fpm=php-fpm
+fpm_config=$prj_dir/app/config/php-fpm.conf
+fpm_pidfile=/var/run/php-fpm/$prj-php-fpm.pid
+nginx=/usr/sbin/nginx
+
+
 function deploy_dev()
 {
 	rm -f $prj_dir
@@ -28,7 +34,7 @@ function deploy_online()
 
 	mkdir -p /data/deploy_www
 	chmod ugo+rx /data/deploy_www
-	
+
 	old_deploys=`ls /data/deploy_www/ | grep "^$prj\.dep\."`
 
 	echo "copy files..."
@@ -55,6 +61,29 @@ function deploy_online()
 	done
 }
 
+start_fpm(){
+	$fpm -y $fpm_config -g $fpm_pidfile
+	if [ -f "$fpm_pidfile" ]; then
+		echo "php-fpm started."
+	else
+		echo "php-fpm failed!"
+	fi
+}
+
+stop_fpm(){
+	echo -n "stopping php-fpm"
+	while [ 1 ]; do 
+		if [ -f "$fpm_pidfile" ]; then
+			echo -n "."
+			kill `cat $fpm_pidfile`
+		else
+			echo " done."
+			break
+		fi
+		sleep 0.5
+	done
+}
+
 
 echo ""
 echo "#######################################"
@@ -67,6 +96,10 @@ if [ "$env" = "online" ]; then
 else
 	deploy_dev
 fi
+
+stop_fpm
+start_fpm
+$nginx -s reload
 
 
 echo ""
