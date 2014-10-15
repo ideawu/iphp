@@ -62,25 +62,31 @@ function deploy_online()
 }
 
 start_fpm(){
+	printf "starting php-fpm..."
 	$fpm -y $fpm_config -g $fpm_pidfile
 	if [ -f "$fpm_pidfile" ]; then
-		echo "php-fpm started."
+		echo ""
+		echo "  started"
 	else
-		echo "php-fpm failed!"
+		echo ""
+		echo "  failed!"
 	fi
 }
 
 stop_fpm(){
-	echo -n "stopping php-fpm"
-	while [ 1 ]; do 
+	printf "stopping php-fpm"
+	for ((i=0; ; i++)); do
+		if [ $((i%10)) = 0 ]; then
+			printf "."
+		fi
 		if [ -f "$fpm_pidfile" ]; then
-			echo -n "."
 			kill `cat $fpm_pidfile`
 		else
-			echo " done."
+			echo ""
+			echo "  stopped"
 			break
 		fi
-		sleep 0.5
+		sleep 0.1;
 	done
 }
 
