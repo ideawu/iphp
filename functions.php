@@ -86,16 +86,7 @@ function ip(){
 }
 
 function _view(){
-	$file = find_view_file();
-	if(!$file){
-		Logger::trace("No view for " . base_path());
-		return false;
-	}
-	Logger::trace("View $file");
-
-	$params = App::$context->as_array();
-	extract($params);
-	include($file);
+	echo App::$view_content;
 }
 
 function _widget($name, $params=array()){
@@ -106,6 +97,7 @@ function _widget($name, $params=array()){
 			$dir = APP_PATH . "/$view_path/$dir/";
 			$file = $dir . "$name.tpl.php";
 			if(file_exists($file)){
+				#Logger::trace("widget: $file");
 				$params = $params + App::$context->as_array();
 				extract($params);
 				include($file);

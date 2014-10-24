@@ -5,7 +5,10 @@ class App{
 	static $controller;
 	static $finish = false;
 	static $config = array();
-	
+
+	// view 的渲染结果先保存在此变量中
+	static $view_content = '';
+
 	static function init(){
 		$config_file = APP_PATH . '/config/config.php';
 		if(!file_exists($config_file)){
@@ -80,8 +83,21 @@ class App{
 				echo $json;
 			}
 		}else{
-			$layout = find_layout_file();
+			#var_dump(find_view_and_layout());
+			list($view, $layout) = find_view_and_layout();
+			if(!$view){
+				Logger::trace("No view for " . base_path());
+			}else{
+				Logger::trace("View $view");
+				$params = App::$context->as_array();
+				extract($params);
+				ob_start();
+				include($view);
+				self::$view_content = ob_get_clean();
+			}
+			
 			if($layout){
+				Logger::trace("Layout $layout");
 				$params = App::$context->as_array();
 				extract($params);
 				include($layout);
