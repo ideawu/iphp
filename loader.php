@@ -169,7 +169,7 @@ function find_view_and_layout(){
 	}
 	if(!$layout_file){
 		foreach(App::$controller->view_path as $view_path){
-			$layout_file = find_layout_file($view[0]);
+			$layout_file = find_layout_file($view_path);
 			if($layout_file){
 				break;
 			}
