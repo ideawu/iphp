@@ -84,24 +84,25 @@ class App{
 			}
 		}else{
 			#var_dump(find_view_and_layout());
-			list($view, $layout) = find_view_and_layout();
-			if(!$view){
+			list($__view, $__layout) = find_view_and_layout();
+			if(!$__view){
 				Logger::trace("No view for " . base_path());
 			}else{
-				Logger::trace("View $view");
+				Logger::trace("View $__view");
 				$params = App::$context->as_array();
 				extract($params);
 				ob_start();
-				include($view);
+				include($__view);
 				self::$view_content = ob_get_clean();
 			}
 			
-			if($layout){
-				Logger::trace("Layout $layout");
+			if($__layout){
+				Logger::trace("Layout $__layout");
 				$params = App::$context->as_array();
 				extract($params);
-				include($layout);
+				include($__layout);
 			}else{
+				Logger::error("No layout for " . base_path());
 				_view();
 			}
 		}
