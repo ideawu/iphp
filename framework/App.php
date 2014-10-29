@@ -102,7 +102,9 @@ class App{
 				extract($params);
 				include($__layout);
 			}else{
-				Logger::error("No layout for " . base_path());
+				if(App::$controller->layout !== false){
+					Logger::error("No layout for " . base_path());
+				}
 				_view();
 			}
 		}
