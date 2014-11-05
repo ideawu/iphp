@@ -30,10 +30,14 @@ class Model
 	}
 
 	function __get($name){
-		if(!property_exists($this, $name) && strpos($name, '_id') !== strlen($name) - 3 && $this->id){
+		if(!property_exists($this, $name) && $this->id && strpos($name, '_id') !== strlen($name) - 3){
 			$cls = ucfirst($name);
-			$val = $this->{$name . '_id'};
-			$this->$name = $cls::get($val);
+			if(property_exists($this, $name . '_id')){
+				$val = $this->{$name . '_id'};
+				$this->$name = $cls::get($val);
+			}else{
+				$this->$name = null;
+			}
 		}
 		return $this->$name;
 	}
