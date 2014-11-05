@@ -13,11 +13,6 @@ fi
 prj_dir=/data/www/$prj
 dep_dir=/data/deploy_www/$prj.dep.`date +%Y%m%d_%H%M%S`
 
-fpm=php-fpm
-fpm_config=$prj_dir/app/config/php-fpm.conf
-fpm_pidfile=/var/run/php-fpm/$prj-php-fpm.pid
-nginx=/usr/sbin/nginx
-
 
 function deploy_dev()
 {
@@ -61,35 +56,6 @@ function deploy_online()
 	done
 }
 
-start_fpm(){
-	printf "starting php-fpm..."
-	$fpm -y $fpm_config -g $fpm_pidfile
-	if [ -f "$fpm_pidfile" ]; then
-		echo ""
-		echo "  started"
-	else
-		echo ""
-		echo "  failed!"
-	fi
-}
-
-stop_fpm(){
-	printf "stopping php-fpm"
-	for ((i=0; ; i++)); do
-		if [ $((i%10)) = 0 ]; then
-			printf "."
-		fi
-		if [ -f "$fpm_pidfile" ]; then
-			kill `cat $fpm_pidfile`
-		else
-			echo ""
-			echo "  stopped"
-			break
-		fi
-		sleep 0.1;
-	done
-}
-
 
 echo ""
 echo "#######################################"
@@ -102,10 +68,6 @@ if [ "$env" = "online" ]; then
 else
 	deploy_dev
 fi
-
-stop_fpm
-start_fpm
-$nginx -s reload
 
 
 echo ""
