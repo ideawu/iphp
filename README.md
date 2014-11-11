@@ -3,6 +3,7 @@
 	app/
 		classes/
 		config/
+		console/
 		controllers/
 		models/
 		views/
