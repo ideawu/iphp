@@ -26,7 +26,7 @@
 	$APP['DOMAIN']: localhost
 	$APP['PHP_FPM.PORT']: 9000
 	
-	Generate app into: /Users/wuzuyang/Works/iphp/tmp/myfirstapp ...
+	Generate app into: /Users/ideawu/Works/iphp/tmp/myfirstapp ...
 	Done!
 
 
