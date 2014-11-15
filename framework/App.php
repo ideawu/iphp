@@ -168,6 +168,8 @@ class App{
 		$code = $e->getCode() === 0? 500 : $e->getCode();
 		if($code == 404){
 			header('Content-Type: text/html; charset=utf-8', true, 404);
+		}else if($code == 403){
+			header('Content-Type: text/html; charset=utf-8', true, 403);
 		}else if($code == 200){
 			//
 		}else{
