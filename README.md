@@ -110,3 +110,4 @@ __注意: 如果你的 nginx.conf 没有配置 `index index.php;`, 请加上.__
 | about/job | about/job.php | JobController#index | about/job.tpl.php | http://localhost/iphp/about/job |
 | api/test | api/test.php | TestController#index | None | http://localhost/iphp/api/test |
 
+
