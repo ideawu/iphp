@@ -1,10 +1,9 @@
 #!/bin/bash
 cur_dir=`old=\`pwd\`; cd \`dirname $0\`; echo \`pwd\`; cd $old;`
-prj=`basename $cur_dir`
-prj_dir=/data/www/$prj
+prj=`basename $cur_dir | sed s/\.dep\..*$//`
 
 fpm=php-fpm
-fpm_config=$prj_dir/app/config/php-fpm.conf
+fpm_config=$cur_dir/app/config/php-fpm.conf
 fpm_pidfile=/var/run/php-fpm/$prj-php-fpm.pid
 nginx=/usr/sbin/nginx
 
