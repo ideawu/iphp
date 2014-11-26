@@ -5,6 +5,7 @@ class Http
 	static $request_timeout = 25;
 
 	static function post($url, $data=array()){
+		self::$error = '';
 		if(is_array($data)){
 			$data = http_build_query($data);
 		}
@@ -18,11 +19,13 @@ class Http
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::$request_timeout);
 		curl_setopt($ch, CURLOPT_TIMEOUT, self::$connect_timeout);
 		$result = @curl_exec($ch) ;
+		self::$error = curl_error($ch);
 		curl_close($ch) ;
 		return $result;
 	}
 
 	static function get($url, $data=null){
+		self::$error = '';
 		if(is_array($data)){
 			$data = http_build_query($data);
 			if(strpos($url, '?') === false){
@@ -39,6 +42,7 @@ class Http
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::$request_timeout);
 		curl_setopt($ch, CURLOPT_TIMEOUT, self::$connect_timeout);
 		$result = @curl_exec($ch) ;
+		self::$error = curl_error($ch);
 		curl_close($ch) ;
 		return $result;
 	}
