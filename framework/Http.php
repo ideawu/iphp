@@ -1,6 +1,7 @@
 <?php
 class Http
 {
+	static $error = '';
 	static $connect_timeout = 5;
 	static $request_timeout = 25;
 
