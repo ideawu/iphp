@@ -48,6 +48,8 @@ function deploy_online()
 	ln -sf $prj_dir/app/config/config_${env}.php $prj_dir/app/config/config.php
 	ln -sf $prj_dir/app/config/nginx_${env}.conf /etc/nginx/conf.d/$prj.conf
 
+	echo "backup old deploy..."
+	sleep 1
 	# 备份旧的版本
 	mkdir -p /data/deploy_www/backup
 	for i in $old_deploys; do
