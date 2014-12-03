@@ -30,8 +30,6 @@ function deploy_online()
 	mkdir -p /data/deploy_www
 	chmod ugo+rx /data/deploy_www
 
-	old_deploys=`ls /data/deploy_www/ | grep "^$prj\.dep\."`
-
 	echo "copy files..."
 	rsync -a --exclude '.*' $cur_dir/ $dep_dir/
 	if [ $? -ne "0" ]; then
@@ -47,15 +45,6 @@ function deploy_online()
 
 	ln -sf $prj_dir/app/config/config_${env}.php $prj_dir/app/config/config.php
 	ln -sf $prj_dir/app/config/nginx_${env}.conf /etc/nginx/conf.d/$prj.conf
-
-	echo "backup old deploy..."
-	sleep 1
-	# 备份旧的版本
-	mkdir -p /data/deploy_www/backup
-	for i in $old_deploys; do
-		echo "backup old deploy: $i"
-		mv /data/deploy_www/$i /data/deploy_www/backup
-	done
 }
 
 
