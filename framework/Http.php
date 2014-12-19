@@ -17,8 +17,8 @@ class Http
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1) ;
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::$request_timeout);
-		curl_setopt($ch, CURLOPT_TIMEOUT, self::$connect_timeout);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::$connect_timeout);
+		curl_setopt($ch, CURLOPT_TIMEOUT, self::$request_timeout);
 		$result = @curl_exec($ch) ;
 		self::$error = curl_error($ch);
 		curl_close($ch) ;
@@ -40,8 +40,8 @@ class Http
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1) ;
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::$request_timeout);
-		curl_setopt($ch, CURLOPT_TIMEOUT, self::$connect_timeout);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::$connect_timeout);
+		curl_setopt($ch, CURLOPT_TIMEOUT, self::$request_timeout);
 		$result = @curl_exec($ch) ;
 		self::$error = curl_error($ch);
 		curl_close($ch) ;
