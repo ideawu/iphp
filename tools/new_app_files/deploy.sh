@@ -14,7 +14,7 @@ prj_dir=/data/www/$prj
 dep_dir=/data/deploy_www/$prj.dep.`date +%Y%m%d_%H%M%S`
 
 
-function deploy_dev()
+deploy_dev()
 {
 	rm -f $prj_dir
 	ln -sf $cur_dir $prj_dir
@@ -22,7 +22,7 @@ function deploy_dev()
 	ln -sf $cur_dir/app/config/nginx_${env}.conf /etc/nginx/conf.d/$prj.conf
 }
 
-function deploy_online()
+deploy_online()
 {
 	mkdir -p /data/applogs/$prj
 	chmod ugo+rwx /data/applogs /data/applogs/$prj
