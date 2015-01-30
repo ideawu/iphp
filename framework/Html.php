@@ -24,7 +24,7 @@ class Html{
 				$host .= ":{$port}";
 			}
 			$path = dirname($_SERVER['SCRIPT_NAME']);
-			if($path == '/'){
+			if($path == '/' || $path == "\\"){
 				$path = ''; 
 			}
 			if($_SERVER['HTTPS'] || $port == 443){
