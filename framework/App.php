@@ -41,6 +41,22 @@ class App{
 	}
 	
 	static function run(){
+		try{
+			return self::_run();
+		}catch(Exception $e){
+			if(App::$controller && App::$controller->is_ajax){
+				$code = $e->getCode();
+				$msg = $e->getMessage();
+				if(!strlen($msg)){
+					$msg = 'error';
+				}
+			}else{
+				return self::error_handle($e);
+			}
+		}
+	}
+	
+	static function _run(){
 		$code = 1;
 		$msg = '';
 		$data = null;
