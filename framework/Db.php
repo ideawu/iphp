@@ -16,6 +16,10 @@ class Db{
 	static function readonly($yesno=true){
 		self::$readonly = $yesno;
 	}
+	
+	static function is_readonly(){
+		return self::$readonly;
+	}
 
 	static function instance(){
 		if(self::$readonly){
