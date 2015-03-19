@@ -42,6 +42,7 @@ class Mysql{
 		$etime = microtime(true);
 		$time = number_format(($etime - $stime) * 1000, 2);
 		$this->query_list[] = $time . ' ' . $sql;
+		#echo $time . ' ' . $sql . ";\n";
 		return $result;
 	}
 	
