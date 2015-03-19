@@ -4,11 +4,7 @@ class Model
 	static $table_name = false;
 
 	static function db(){
-		static $db = null;
-		if($db === null){
-			$db = Db::instance();
-		}
-		return $db;
+		return Db::instance();
 	}
 	
 	static function table(){
