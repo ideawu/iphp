@@ -1,8 +1,9 @@
 <?php
-include(dirname(__FILE__) . '/Mysql.php');
+require_once(dirname(__FILE__) . '/Mysql.php');
 
 class Db{
 	private static $config = array();
+	private static $readonly = false;
 
 	function __construct(){
 		throw new Exception("Static class");
@@ -11,8 +12,23 @@ class Db{
 	static function init($config=array()){
 		self::$config = $config;
 	}
+	
+	static function readonly($yesno=true){
+		self::$readonly = $yesno;
+	}
 
 	static function instance(){
+		if(self::$readonly){
+			static $readonly_db = null;
+			if($readonly_db === null){
+				if(isset(self::$config['readonly_db'])){
+					$readonly_db = new Mysql(self::$config['readonly_db']);
+				}
+			}			
+			if($readonly_db){
+				return $readonly_db;
+			}
+		}
 		static $db = null;
 		if($db === null){
 			$db = new Mysql(self::$config);

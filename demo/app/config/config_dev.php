@@ -16,5 +16,13 @@ return array(
 		'username' => 'u',
 		'password' => '123456',
 		'charset' => 'utf8',
+		// call Db::readonly(true) to enable readonly_db
+		'readonly_db' => array(
+			'host' => '127.0.0.1',
+			'dbname' => 'db',
+			'username' => 'u2',
+			'password' => '123456',
+			'charset' => 'utf8',
+		),
 	),
 );
