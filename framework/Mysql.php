@@ -8,6 +8,7 @@ class Mysql{
 	var $conn;
 	var $query_list = array();
 	public $query_count = 0;
+	var $readonly = false;
 
 	public function __construct($c){
 		if(!isset($c['port'])){
@@ -31,6 +32,14 @@ class Mysql{
 	 * 执行 mysql_query 并返回其结果.
 	 */
 	public function query($sql){
+		if($this->readonly){
+			static $disabled_ops = array('update', 'delete', 'insert', 'replace');
+			foreach($disabled_ops as $op){
+				if(stripos($sql, $op) === 0){
+					throw new Exception("write operation is not allowed on readonly db!");
+				}
+			}
+		}
 		$stime = microtime(true);
 
 		$result = mysql_query($sql, $this->conn);

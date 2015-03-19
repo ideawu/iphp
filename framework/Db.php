@@ -23,6 +23,7 @@ class Db{
 			if($readonly_db === null){
 				if(isset(self::$config['readonly_db'])){
 					$readonly_db = new Mysql(self::$config['readonly_db']);
+					$readonly_db->readonly = true;
 				}
 			}			
 			if($readonly_db){
