@@ -20,6 +20,22 @@ class Db{
 	static function is_readonly(){
 		return self::$readonly;
 	}
+	
+	private static $readonly_vars = array();
+	
+	static function push_readonly($yesno){
+		self::$readonly_vars[] = self::$readonly;
+		self::readonly($yesno);
+	}
+	
+	static function pop_readonly(){
+		if(!self::$readonly_vars){
+			throw new Exception("No vars to pop from readonly_vars!");
+		}
+		$yesno = array_pop(self::$readonly_vars);
+		self::readonly($yesno);
+		return $yesno;
+	}
 
 	static function instance(){
 		if(self::$readonly){
