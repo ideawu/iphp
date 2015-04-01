@@ -93,7 +93,7 @@ class Logger{
 			$usec = substr(sprintf('%03d', $usec), 0, 3);
 			$time = date("Y-m-d H:i:s.{$usec}", $sec);
 			$msg = $log->msg;
-			$msg = preg_replace('/[ \r\n\t]*\n[ \r\n\t]*/', '', $msg);
+			$msg = preg_replace('/[ \r\n\t]*\n[ \r\n\t]*/', ' ', $msg);
 			$msg = preg_replace('/[ \r\n\t]+/', ' ', $msg);
 
 			if($_SERVER["HTTP_CLIENT_IP"] && $_SERVER["HTTP_CLIENT_IP"]!='unknown'){
