@@ -75,6 +75,10 @@ class Db{
 		return self::instance()->query($sql);
 	}
 	
+	static function begin(){
+		self::query('begin');
+	}
+	
 	static function get_num($sql){
 		$result = self::query($sql);
 		if($row = mysql_fetch_array($result)){
