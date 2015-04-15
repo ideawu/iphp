@@ -203,7 +203,7 @@ class App{
 		$msg = htmlspecialchars($e->getMessage());
 		$html = '';
 		$html .= '<html><head>';
-		$html .= '<meta charset="UTF-8">';
+		$html .= '<meta charset="UTF-8"/>';
 		$html .= "<title>$msg</title>\n";
 		$html .= "<style>body{font-size: 14px; font-family: monospace;}</style>\n";
 		$html .= "</head><body>\n";
