@@ -50,9 +50,10 @@ class Mysql{
 
 		$etime = microtime(true);
 		$time = number_format(($etime - $stime) * 1000, 2);
-		$this->query_list[] = $time . ' ' . $sql;
-		#echo $time . ' ' . $sql . ";\n";
-		#Logger::debug($time . ' ' . $sql);
+		$ro = $this->readonly? '[RO]' : '[RW]';
+		$log = "{$ro} {$time} $sql";
+		$this->query_list[] = $log;
+		#Logger::debug($log);
 		return $result;
 	}
 	
