@@ -68,7 +68,7 @@ class Db{
 	
 	static function query($sql){
 		if(self::$load_balance){
-			if(Mysql::is_write_operation($sql)){
+			if(Mysql::is_write_query($sql)){
 				self::readonly(false);
 			}
 		}
