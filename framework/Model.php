@@ -91,6 +91,7 @@ class Model
 	}
 	
 	static function save($attrs){
+		Db::readonly(false); // 只要有写操作, 就禁用读写分离
 		$table = self::table();
 		self::db()->save($table, $attrs);
 		$ret = self::get($attrs['id']);
@@ -101,6 +102,7 @@ class Model
 	}
 	
 	function update($attrs){
+		Db::readonly(false); // 只要有写操作, 就禁用读写分离
 		$tmp = $attrs;
 		$table = self::table();
 		$attrs['id'] = $this->id;
@@ -109,6 +111,25 @@ class Model
 			$this->$k = $v;
 		}
 		return $ret;
+	}
+	
+	static function delete($id){
+		Db::readonly(false); // 只要有写操作, 就禁用读写分离
+		return self::db()->remove(self::table(), $id);
+	}
+
+	static function deleteByWhere($where){
+		return self::delete_by_where($where);
+	}
+	
+	static function delete_by_where($where){
+		Db::readonly(false); // 只要有写操作, 就禁用读写分离
+		$table = self::table();
+		$sql = "delete from $table where 1";
+		if($where){
+			$sql .= " and $where";
+		}
+		return self::db()->query($sql);
 	}
 
 	static function getBy($field, $val){
@@ -151,23 +172,6 @@ class Model
 			return $rs[0];
 		}
 		return null;
-	}
-	
-	static function delete($id){
-		return self::db()->remove(self::table(), $id);
-	}
-
-	static function deleteByWhere($where){
-		return self::delete_by_where($where);
-	}
-	
-	static function delete_by_where($where){
-		$table = self::table();
-		$sql = "delete from $table where 1";
-		if($where){
-			$sql .= " and $where";
-		}
-		return self::db()->query($sql);
 	}
 }
 

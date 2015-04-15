@@ -27,17 +27,18 @@ class Mysql{
 			mysql_query("set names " . $c['charset'], $this->conn);
 		}
 	}
+	
+	public static function is_write_query($sql){
+        return (bool) @preg_match('/^\s*"?(BEGIN|SET|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|TRUNCATE|LOAD|COPY|ALTER|RENAME|GRANT|REVOKE|LOCK|UNLOCK|REINDEX)\s/i', $sql);
+	}
 
 	/**
 	 * 执行 mysql_query 并返回其结果.
 	 */
 	public function query($sql){
 		if($this->readonly){
-			static $disabled_ops = array('update', 'delete', 'insert', 'replace');
-			foreach($disabled_ops as $op){
-				if(stripos($sql, $op) === 0){
-					throw new Exception("write operation is not allowed on readonly db!");
-				}
+			if(self::is_write_query($sql)){
+				throw new Exception("write operation is not allowed on readonly db!");
 			}
 		}
 		$stime = microtime(true);

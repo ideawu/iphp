@@ -4,6 +4,7 @@ require_once(dirname(__FILE__) . '/Mysql.php');
 class Db{
 	private static $config = array();
 	private static $readonly = false;
+	private static $load_balance = false;
 
 	function __construct(){
 		throw new Exception("Static class");
@@ -13,7 +14,15 @@ class Db{
 		self::$config = $config;
 	}
 	
+	static function load_balance($yesno=true){
+		self::$load_balance = $yesno;
+		self::$readonly = $yesno;
+	}
+	
 	static function readonly($yesno=true){
+		if(!$yesno){
+			self::$load_balance = false;
+		}
 		self::$readonly = $yesno;
 	}
 	
@@ -55,6 +64,15 @@ class Db{
 			$db = new Mysql(self::$config);
 		}
 		return $db;
+	}
+	
+	static function query($sql){
+		if(self::$load_balance){
+			if(Mysql::is_write_operation($sql)){
+				self::readonly(false);
+			}
+		}
+		return self::instance()->query($sql);
 	}
 	
 	static function get_num($sql){
