@@ -9,6 +9,15 @@ class App{
 	// view 的渲染结果先保存在此变量中
 	static $view_content = '';
 
+	static function host(){
+		$host = $_SERVER['HTTP_HOST'];
+		$port = $_SERVER['SERVER_PORT'];
+		if(strpos($host, ':') === false && $port != 80 && $port != 443){
+			$host .= ":{$port}";
+		}
+		return $host;
+	}
+
 	static function init(){
 		$config_file = APP_PATH . '/config/config.php';
 		if(!file_exists($config_file)){
