@@ -29,7 +29,11 @@ class Mysql{
 	}
 	
 	public static function is_write_query($sql){
-        return (bool) @preg_match('/^\s*"?(BEGIN|SET|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|TRUNCATE|LOAD|COPY|ALTER|RENAME|GRANT|REVOKE|LOCK|UNLOCK|REINDEX)\s/i', $sql);
+		$sql = trim($sql);
+		if(strcasecmp($sql, 'begin') == 0){
+			return true;
+		}
+        return (bool) @preg_match('/^\s*"?(SET|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|TRUNCATE|LOAD|COPY|ALTER|RENAME|GRANT|REVOKE|LOCK|UNLOCK|REINDEX)\s/i', $sql);
 	}
 
 	/**
