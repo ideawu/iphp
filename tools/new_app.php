@@ -25,8 +25,13 @@ function generate(){
 
 	$app_dir = getcwd() . '/' . $APP['NAME'];
 	if(file_exists($app_dir)){
-		echo "Error: App path[$app_dir] already exists!\n";
-		die();
+		echo "\n";
+		echo "Warnning: App path[$app_dir] already exists!\n";
+		echo "Overwrite?(n/y): ";
+		$line = strtolower(trim(fgets(STDIN)));
+		if($line !== 'y'){
+			die();
+		}
 	}
 	echo "\n";
 	echo "Generate app into: $app_dir ...\n";

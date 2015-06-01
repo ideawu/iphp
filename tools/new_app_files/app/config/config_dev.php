@@ -4,10 +4,10 @@ define('ENV', 'dev');
 return array(
 	'env' => ENV,
 	'logger' => array(
-		'level' => 'all', // none/off|(LEVEL)
+		'level' => 'debug', // none/off|(LEVEL)
 		'dump' => 'file', // none|html|file, 可用'|'组合
 		'files' => array( // ALL|(LEVEL)
-			'ALL'	=> dirname(__FILE__) . '/../../logs/' . date('Y-m') . '.log',
+			'ALL'	=> "/data/applogs/{$APP['NAME']}/" . date('Y-m') . '.log',
 		),
 	),
 	'db' => array(

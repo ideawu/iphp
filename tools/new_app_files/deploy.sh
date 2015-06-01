@@ -16,6 +16,9 @@ dep_dir=/data/deploy_www/$prj.dep.`date +%Y%m%d_%H%M%S`
 
 deploy_dev()
 {
+	mkdir -p /data/applogs/$prj
+	chmod ugo+rwx /data/applogs /data/applogs/$prj
+
 	rm -f $prj_dir
 	ln -sf $cur_dir $prj_dir
 	ln -sf $cur_dir/app/config/config_${env}.php $cur_dir/app/config/config.php
@@ -59,6 +62,9 @@ if [ "$env" = "online" ]; then
 else
 	deploy_dev
 fi
+
+
+sh $prj_dir/server.sh restart
 
 
 echo ""
