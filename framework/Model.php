@@ -91,9 +91,7 @@ class Model
 	}
 	
 	static function save($attrs){
-		Db::readonly(false); // 只要有写操作, 就禁用读写分离
-		$table = self::table();
-		self::db()->save($table, $attrs);
+		Db::save_row(self::table(), $attrs);
 		$ret = self::get($attrs['id']);
 		if(!$ret){
 			throw new Exception("无法写入数据库");
@@ -102,11 +100,8 @@ class Model
 	}
 	
 	function update($attrs){
-		Db::readonly(false); // 只要有写操作, 就禁用读写分离
 		$tmp = $attrs;
-		$table = self::table();
-		$attrs['id'] = $this->id;
-		$ret = self::db()->update($table, $attrs);
+		$ret = Db::update_row(self::table(), $this->id, $attrs);
 		foreach($tmp as $k=>$v){
 			$this->$k = $v;
 		}
@@ -114,8 +109,7 @@ class Model
 	}
 	
 	static function delete($id){
-		Db::readonly(false); // 只要有写操作, 就禁用读写分离
-		return self::db()->remove(self::table(), $id);
+		return Db::delete_row(self::table(), $id);
 	}
 
 	static function deleteByWhere($where){
@@ -123,7 +117,6 @@ class Model
 	}
 	
 	static function delete_by_where($where){
-		Db::readonly(false); // 只要有写操作, 就禁用读写分离
 		$table = self::table();
 		$sql = "delete from $table where 1";
 		if($where){

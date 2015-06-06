@@ -20,9 +20,7 @@ class Db{
 	}
 	
 	static function readonly($yesno=true){
-		if(!$yesno){
-			self::$load_balance = false;
-		}
+		self::$load_balance = false;
 		self::$readonly = $yesno;
 	}
 	
@@ -77,6 +75,30 @@ class Db{
 	
 	static function begin(){
 		self::query('begin');
+	}
+	
+	static function save_row($table, &$attrs){
+		if(self::$load_balance){
+			self::readonly(false);
+		}
+		$ret = self::instance()->save($table, $attrs);
+		return $ret;
+	}
+
+	static function update_row($table, $id, $attrs){
+		if(self::$load_balance){
+			self::readonly(false);
+		}
+		$attrs['id'] = $id;
+		$ret = self::instance()->update($table, $attrs);
+		return $ret;
+	}
+
+	static function delete_row($table, $id){
+		if(self::$load_balance){
+			self::readonly(false);
+		}
+		return self::instance()->remove($table, $id);
 	}
 	
 	static function get_num($sql){
