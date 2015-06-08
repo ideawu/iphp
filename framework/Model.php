@@ -122,7 +122,7 @@ class Model
 		if($where){
 			$sql .= " and $where";
 		}
-		return self::db()->query($sql);
+		return Db::query($sql);
 	}
 
 	static function getBy($field, $val){
