@@ -52,7 +52,7 @@
 		location ~ /(app|logs)/ {
 			deny all;
 		}
-		location ~ \.(sh|sql|conf|key|crt) {
+		location ~ \.(sh|sql|conf|key|crt|csr) {
 			deny all;
 		}
 		location ~ \.(gif|png|jpg|ico|svg|css|js|ttf|woff|eot)$ {
