@@ -57,7 +57,9 @@ class Mysql{
 		$time = number_format(($etime - $stime) * 1000, 2);
 		$ro = $this->readonly? '[RO]' : '[RW]';
 		$log = "{$ro} {$time} $sql";
-		$this->query_list[] = $log;
+		if(defined('ENV') && ENV == 'debug'){
+			$this->query_list[] = $log;
+		}
 		#Logger::debug($log);
 		return $result;
 	}
