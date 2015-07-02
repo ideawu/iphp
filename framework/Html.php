@@ -66,11 +66,25 @@ class Html{
 		}
 		return $query;
 	}
+	
+	private static function is_static_resource($url){
+		static $exts = array('js', 'css', 'jpg', 'png', 'gif', 'svg', 'ttf', 'ico', 'eot', 'woff', 'swf');
+		$ps = explode('?', $url);
+		$url = $ps[0];
+		$ps = explode('#', $url);
+		$url = $ps[0];
+		$ps = explode('.', $url);
+		$ext = $ps[count($ps) - 1];
+		return in_array($ext, $exts);
+	}
 
 	static function link($url, $param=array()){
 		if(strpos($url, 'http://') === false && strpos($url, 'https://') === false){
 			$url = trim($url, '/');
 			$url = self::base_url() . '/' . $url;
+		}
+		if(App::$version && !isset($param['_v']) && self::is_static_resource($url)){
+			$param['_v'] = App::$version;
 		}
 		if($param){
 			if(strpos($url, '?')){

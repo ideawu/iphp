@@ -5,6 +5,7 @@ class App{
 	static $controller;
 	static $finish = false;
 	static $config = array();
+	static $version = '';
 
 	// view 的渲染结果先保存在此变量中
 	static $view_content = '';
@@ -19,6 +20,11 @@ class App{
 	}
 
 	static function init(){
+		$version_file = APP_PATH . '/../version';
+		if(file_exists($version_file)){
+			self::$version = trim(@file_get_contents($version_file));
+		}
+		
 		$config_file = APP_PATH . '/config/config.php';
 		if(!file_exists($config_file)){
 			throw new Exception("No config file");
