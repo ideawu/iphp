@@ -68,7 +68,7 @@ class Html{
 	}
 	
 	private static function is_static_resource($url){
-		static $exts = array('js', 'css', 'jpg', 'png', 'gif', 'svg', 'ttf', 'ico', 'eot', 'woff', 'swf');
+		static $exts = array('js', 'css');
 		$ps = explode('?', $url);
 		$url = $ps[0];
 		$ps = explode('#', $url);
