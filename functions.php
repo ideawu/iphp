@@ -47,7 +47,7 @@ function _url($url='', $params=array()){
 	if(strpos($url, 'http://') === false && strpos($url, 'https://') === false){
 		$ps = explode('/', $url);
 		$act = $ps[count($ps)-1];
-		if(isset($params['id']) && in_array($act, $special_actions)){
+		if(isset($params['id']) && preg_match('/^\d+$/', $params['id']) && in_array($act, $special_actions)){
 			$ps[count($ps)-1] = $params['id'];
 			if($act != 'view'){
 				$ps[count($ps)] = $act;
