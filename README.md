@@ -29,6 +29,14 @@
 	Generate app into: /Users/ideawu/Works/iphp/tmp/myfirstapp ...
 	Done!
 
+### 项目部署
+
+进入你的项目源码目录, 然后执行
+
+```
+sh deploy.sh dev
+sh server.sh retart
+```
 
 # Nginx 配置
 
