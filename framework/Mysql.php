@@ -50,7 +50,7 @@ class Mysql{
 		$result = mysql_query($sql, $this->conn);
 		$this->query_count ++;
 		if($result === false){
-			if(defined('ENV') && ENV == 'debug'){
+			if(defined('ENV') && ENV == 'dev'){
 				throw new Exception(mysql_error($this->conn)." in SQL: $sql");
 			}else{
 				throw new Exception('db error');
@@ -61,7 +61,7 @@ class Mysql{
 		$time = number_format(($etime - $stime) * 1000, 2);
 		$ro = $this->readonly? '[RO]' : '[RW]';
 		$log = "{$ro} {$time} $sql";
-		if(defined('ENV') && ENV == 'debug'){
+		if(defined('ENV') && ENV == 'dev'){
 			$this->query_list[] = $log;
 		}
 		#Logger::debug($log);
