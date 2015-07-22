@@ -50,7 +50,11 @@ class Mysql{
 		$result = mysql_query($sql, $this->conn);
 		$this->query_count ++;
 		if($result === false){
-			throw new Exception(mysql_error($this->conn)." in SQL: $sql");
+			if(defined('ENV') && ENV == 'debug'){
+				throw new Exception(mysql_error($this->conn)." in SQL: $sql");
+			}else{
+				throw new Exception('db error');
+			}
 		}
 
 		$etime = microtime(true);
