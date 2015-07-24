@@ -69,6 +69,10 @@ function secure_path($path){
 	return $path;
 }
 
+function real_ip(){
+	return $_SERVER["REMOTE_ADDR"];
+}
+
 function ip(){
 	static $cip = null;
 	if($cip == null){
