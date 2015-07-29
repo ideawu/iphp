@@ -50,6 +50,7 @@ class Mysql{
 		$result = mysql_query($sql, $this->conn);
 		$this->query_count ++;
 		if($result === false){
+			Logger::error(mysql_error($this->conn)." in SQL: $sql");
 			if(defined('ENV') && ENV == 'dev'){
 				throw new Exception(mysql_error($this->conn)." in SQL: $sql");
 			}else{
