@@ -35,7 +35,7 @@
 
 ```
 sh deploy.sh dev
-sh server.sh retart
+sh server.sh restart
 ```
 
 # Nginx 配置
