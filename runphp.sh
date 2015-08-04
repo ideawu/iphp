@@ -1,6 +1,6 @@
 #!/bin/sh
 # 用于 crontab 中执行一个 php 命令行脚本
-# runphp 会进行加锁, 遍历一个脚本启动多个实例, 所以可以放心在用 crontab 来执行
+# runphp 会进行加锁, 避免一个脚本启动多个实例, 所以可以放心在用 crontab 来执行
 php=php
 php_file=$1
 lock_file=/tmp/runphp_lock.`echo $1 | sed 's/\//_/g' | sed 's/^\.*//'`.lock
