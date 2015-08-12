@@ -37,7 +37,7 @@ class App{
 		self::$context = new Context();
 
 		Logger::init($config['logger']);
-		if($config['db']){
+		if(isset($config['db'])){
 			Db::init($config['db']);
 		}
 
