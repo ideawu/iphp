@@ -6,6 +6,7 @@ class App{
 	static $finish = false;
 	static $config = array();
 	static $version = '';
+	static $base_url = null;
 
 	// view 的渲染结果先保存在此变量中
 	static $view_content = '';
@@ -17,6 +18,11 @@ class App{
 			$host .= ":{$port}";
 		}
 		return $host;
+	}
+	
+	static function set_base_url($base_url){
+		$base_url = rtrim($base_url, '/');
+		self::$base_url = $base_url;
 	}
 
 	static function init(){

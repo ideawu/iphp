@@ -16,6 +16,9 @@ class Html{
 	}
 	
 	static function base_url(){
+		if(App::$base_url){
+			return App::$base_url;
+		}
 		static $link = null;
 		if($link === null){
 			$host = $_SERVER['HTTP_HOST'];
