@@ -76,6 +76,8 @@ class Model
 		if(strlen($order)){
 			$order = "order by $order";
 		}
+		$start = intval($start);
+		$size = intval($size);
 		$limit = "limit $start, $size";
 		$table = self::table();
 
@@ -145,6 +147,8 @@ class Model
 		if(strlen($order)){
 			$order = "order by $order";
 		}
+		$start = intval($start);
+		$size = intval($size);
 		$limit = "limit $start, $size";
 		$table = self::table();
 		$sql = "select * from $table $where $order $limit";
