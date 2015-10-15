@@ -45,6 +45,21 @@ class Model
 		}
 		return self::_model($row);
 	}
+	
+	// 返回以 id 作为 key, value 是对象的关联数组.
+	static function get_by_ids($ids){
+		if(is_array($ids) && count($ids) == 0){
+			return array();
+		}
+		$in = Db::build_in_string($ids);
+		$where = "id in ($in)";
+		$tmp = self::find(0, count($ids), $where);
+		$ret = array();
+		foreach($tmp as $v){
+			$ret[$v->id] = $v;
+		}
+		return $ret;
+	}
 
 	private static function _model($row){
 		$m = new static();
