@@ -84,6 +84,8 @@ function ip(){
 			$cip = "0.0.0.0";
 		}
 	}
+	$cip = explode(',', $cip);
+	$cip = trim($cip[count($cip) - 1]);
 	return $cip;
 }
 
