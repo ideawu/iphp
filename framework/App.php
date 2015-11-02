@@ -204,6 +204,7 @@ class App{
 	static function error_handle($e){
 		$code = $e->getCode() === 0? 500 : $e->getCode();
 		if($code == 404){
+			App::$controller = new Controller();
 			header('Content-Type: text/html; charset=utf-8', true, 404);
 		}else if($code == 403){
 			header('Content-Type: text/html; charset=utf-8', true, 403);
