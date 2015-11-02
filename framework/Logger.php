@@ -105,6 +105,8 @@ class Logger{
 			}else{
 				$cip = "0.0.0.0";
 			}
+			$cip = explode(',', $cip);
+			$cip = trim($cip[count($cip) - 1]);
 
 			$bt = debug_backtrace(false);
 			$c_file = basename($bt[2]['file']);
