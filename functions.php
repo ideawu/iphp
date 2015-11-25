@@ -157,7 +157,7 @@ function _render($name){
  * @param mixed m Model 对象的实例, 或者是参数数组
  * @param string module 如果不指定, 则为当前的 controller
  */
-function _action($action, $m=null, $module=null){
+function _action($action='', $m=null, $module=null){
 	if(is_array($m)){
 		$params = $m;
 	}else if(is_object($m)){
