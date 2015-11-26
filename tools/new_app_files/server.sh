@@ -7,20 +7,19 @@ fpm_config=$cur_dir/app/config/php-fpm.conf
 fpm_pidfile=/var/run/php-fpm/$prj-php-fpm.pid
 nginx=/usr/sbin/nginx
 
-
-start(){
+start_fpm(){
 	printf "starting php-fpm..."
 	$fpm -y $fpm_config -g $fpm_pidfile
 	if [ -f "$fpm_pidfile" ]; then
 		echo ""
-		echo "  started"
+		echo "  php-fpm started"
 	else
 		echo ""
-		echo "  failed!"
+		echo "  php-fpm failed!"
 	fi
 }
 
-stop(){
+stop_fpm(){
 	printf "stopping php-fpm"
 	for ((i=0; ; i++)); do
 		if [ $((i%10)) = 0 ]; then
@@ -37,17 +36,30 @@ stop(){
 	done
 }
 
+ask_restart_fpm(){
+	echo ""
+	/bin/echo -n "restart php-fpm?(y/n)[n] "
+	read yn
+	if [ "$yn" = "y" ] ; then
+		:
+	else
+		echo "skip php-fpm"
+		return
+	fi
+	stop_fpm
+	start_fpm
+}
+
 case "$1" in 
 	'start')
-		stop
-		start
+		stop_fpm
+		start_fpm
 		;;
 	'stop') 
-		stop
+		stop_fpm
 		;;
 	'restart')
-		stop
-		start
+		ask_restart_fpm
 		$nginx -s reload
 		;;
 	*)
