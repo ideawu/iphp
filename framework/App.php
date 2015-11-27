@@ -30,6 +30,8 @@ class App{
 		if(file_exists($version_file)){
 			self::$version = trim(@file_get_contents($version_file));
 		}
+		// before any exception
+		self::$context = new Context();
 		
 		$config_file = APP_PATH . '/config/config.php';
 		if(!file_exists($config_file)){
@@ -39,8 +41,6 @@ class App{
 
 		self::$config = $config;
 		self::$env = $config['env'];
-		#self::$context = new stdClass();
-		self::$context = new Context();
 
 		Logger::init($config['logger']);
 		if(isset($config['db'])){
