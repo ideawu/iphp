@@ -36,7 +36,7 @@ function base_path(){
 }
 
 function _url($url='', $params=array()){
-	static $special_actions = array('view', 'edit', 'update');
+	static $special_actions = array('view');
 	if(is_object($params)){
 		$p = array();
 		if(isset($params->id)){
