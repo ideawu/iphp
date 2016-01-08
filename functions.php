@@ -16,6 +16,9 @@ function base_path(){
 		*/
 		// URL rewrite
 		$ps = explode('/', $uri);
+		if($ps[count($ps)-1] == 'index'){
+			unset($ps[count($ps)-1]);
+		}
 		$np = count($ps);
 		if(preg_match('/^\d+$/', $ps[$np-1])){
 			$_GET['id'] = $ps[$np-1];
