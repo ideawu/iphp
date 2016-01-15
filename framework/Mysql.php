@@ -130,6 +130,7 @@ class Mysql{
 	
 	public function get_num($sql){
 		$row = $this->get($sql, 'array');
+		$row = array_values($row);
 		return $row? (int)$row[0] : 0;
 	}
 
