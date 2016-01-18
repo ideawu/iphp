@@ -125,8 +125,12 @@ class Mysql_i{
 	
 	public function get_num($sql){
 		$row = $this->get($sql, 'array');
-		$row = array_values($row);
-		return $row? (int)$row[0] : 0;
+		if($row){
+			$row = array_values($row);
+			return (int)$row[0];
+		}else{
+			return 0;
+		}
 	}
 
 	/**
