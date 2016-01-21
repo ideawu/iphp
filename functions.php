@@ -210,5 +210,11 @@ function _days_until_now($date){
 }
 
 function _throw($msg, $code=0){
+	if(is_object($msg) && (is_a($msg, 'Exception') || is_subclass_of($msg, 'Exception'))){
+		if($code === 0){
+			$code = $msg->getCode();
+		}
+		throw new Exception($msg->getMessage(), $code);
+	}
 	throw new Exception($msg, $code);
 }
