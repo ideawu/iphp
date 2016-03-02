@@ -26,9 +26,9 @@ class App{
 	}
 
 	static function init(){
-		$version_file = APP_PATH . '/../version';
+		$version_file = APP_PATH . '/../md5.json';
 		if(file_exists($version_file)){
-			self::$version = trim(@file_get_contents($version_file));
+			self::$version = json_decode(@file_get_contents($version_file), true);
 		}
 		// before any exception
 		self::$context = new Context();
