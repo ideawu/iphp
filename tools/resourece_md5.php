@@ -16,14 +16,23 @@ if ($argc > 1) {
 	$static_dir = array_slice($argv, 1);
 }
 
-walk_dir($static_dir, 'resolve_file');
-file_put_contents('md5.json', json_format(json_encode($MD5)));
+$files = walk_file($static_dir);
+
+for ($i=0, $l=count($files); $i < $l; $i++) { 
+	$extname = pathinfo($files[$i], PATHINFO_EXTENSION);
+	if (in_array($extname, $extnames)) {
+		$MD5[$files[$i]] = md5_file($files[$i]);
+	}
+}
+
+file_put_contents('md5.json', pretty_json($MD5));
 echo 'generated file ' . $cwd . "/md5.json !\n";
 
-function walk_dir($path, $callback) {
+function walk_file($path) {
+	$res = array();
 	if (is_array($path)) {
 		foreach ($path as $p) {
-			walk_dir($p, $callback);
+			$res = array_merge($res, walk_file($p));
 		}
 	} elseif (is_string($path)) {
 		if (file_exists($path)) {
@@ -38,82 +47,29 @@ function walk_dir($path, $callback) {
 						$files[$i] = $path . '/' . $files[$i];
 					}
 				}
-				walk_dir($files, $callback);
+				$res = array_merge(walk_file($files));
 			} elseif (is_file($path)) {
-				call_user_func($callback, $path);
+				array_push($res, $path);
 			}
 		}
 	}
+	return $res;
 }
 
-function resolve_file($file) {
-	$extname = pathinfo($file, PATHINFO_EXTENSION);
-	if (in_array($extname, $GLOBALS['extnames'])) {
-		$GLOBALS['MD5'][$file] = md5_file($file);
+function pretty_json ($json) {
+	// php version >= 5.4
+	if (defined('JSON_PRETTY_PRINT')) {
+		if (is_string($json)) {
+			$json_obj = json_decode($json);
+		} else {
+			$json_obj = $json;
+		}
+		return json_encode($json_obj, JSON_PRETTY_PRINT);
+	} else {
+		if (is_string($json)) {
+			return $json;
+		} else {
+			return json_encode($json);
+		}
 	}
 }
-
-//pretty json,  PHP version >= 5.4 can use json_encode($json, JSON_PRETTY_PRINT);
-function json_format($json) { 
-	$tab = "  "; 
-	$new_json = ""; 
-	$indent_level = 0; 
-	$in_string = false; 
-
-	$json_obj = json_decode($json); 
-
-	if($json_obj === false) 
-		return false; 
-
-	$json = json_encode($json_obj); 
-	$len = strlen($json); 
-
-	for($c = 0; $c < $len; $c++) { 
-		$char = $json[$c]; 
-		switch($char) { 
-			case '{': 
-			case '[': 
-				if(!$in_string) { 
-					$new_json .= $char . "\n" . str_repeat($tab, $indent_level+1); 
-					$indent_level++; 
-				} 
-				else { 
-					$new_json .= $char; 
-				} 
-				break; 
-			case '}': 
-			case ']': 
-				if(!$in_string) { 
-					$indent_level--; 
-					$new_json .= "\n" . str_repeat($tab, $indent_level) . $char; 
-				} 
-				else { 
-					$new_json .= $char; 
-				} 
-				break; 
-			case ',': 
-				if(!$in_string) { 
-					$new_json .= ",\n" . str_repeat($tab, $indent_level); 
-				} else { 
-					$new_json .= $char; 
-				} 
-				break; 
-			case ':': 
-				if(!$in_string) { 
-					$new_json .= ": "; 
-				} 
-				else { 
-					$new_json .= $char; 
-				} 
-				break; 
-			case '"': 
-				if($c > 0 && $json[$c-1] != '\\') { 
-					$in_string = !$in_string; 
-				} 
-			default: 
-				$new_json .= $char; 
-				break;                    
-		} 
-	} 
-	return $new_json; 
-} 
