@@ -87,7 +87,8 @@ class Html{
 			$url = self::base_url() . '/' . $url;
 		}
 		if(App::$version && !isset($param['_v']) && self::is_static_resource($url)){
-			$param['_v'] = App::$version;
+			$relative_path = substr($url, strlen(self::base_url().'/'));
+			$param['_v'] = App::$version[$relative_path];
 		}
 		if($param){
 			if(strpos($url, '?')){
