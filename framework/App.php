@@ -6,7 +6,7 @@ class App{
 	static $finish = false;
 	static $config = array();
 	static $version = '';
-	static $asset_md5 = '';
+	static $asset_md5 = array();
 	static $base_url = null;
 
 	// view 的渲染结果先保存在此变量中
