@@ -7,10 +7,9 @@
 */
 
 $cwd = getcwd();
-$md5_file_name = 'md5.json';
-$static_dir = array('js', 'css', 'static');
-$extnames = array('js', 'css');
-$MD5 = array();
+$md5_file_name = 'assets.json';
+$static_dir = array('js', 'css', 'static', 'imgs');
+$extnames = array('js', 'css', 'jpg', 'png', 'gif');
 
 if ($argc > 1) {
 	$static_dir = array_slice($argv, 1);
@@ -18,15 +17,14 @@ if ($argc > 1) {
 
 $files = walk_file($static_dir);
 
-for ($i=0, $l=count($files); $i < $l; $i++) { 
-	$extname = pathinfo($files[$i], PATHINFO_EXTENSION);
-	if (in_array($extname, $extnames)) {
-		$MD5[$files[$i]] = md5_file($files[$i]);
+$results = array();
+foreach($files as $file){
+	$ext = pathinfo($file, PATHINFO_EXTENSION);
+	if (in_array($ext, $extnames)) {
+		$results[$file] = md5_file($file);
 	}
 }
-
-file_put_contents('md5.json', pretty_json($MD5));
-echo 'generated file ' . $cwd . "/md5.json !\n";
+file_put_contents($md5_file_name, pretty_json($results) . "\n");
 
 function walk_file($path) {
 	$res = array();
@@ -38,16 +36,13 @@ function walk_file($path) {
 		if (file_exists($path)) {
 			if (is_dir($path)) {
 				$files = scandir($path);
-				for ($i=0, $l=count($files); $i < $l; $i++) { 
-					if ($files[$i] == '.' || $files[$i] == '..') {
-						array_splice($files, $i, 1);
-						$i--;
-						$l--;
-					} else {
-						$files[$i] = $path . '/' . $files[$i];
+				foreach($files as $file){
+					if($file == '.' || $file == '..'){
+						continue;
 					}
+					$file = $path . '/' . $file;
+					$res = array_merge($res, walk_file($file));
 				}
-				$res = array_merge(walk_file($files));
 			} elseif (is_file($path)) {
 				array_push($res, $path);
 			}
@@ -73,3 +68,4 @@ function pretty_json ($json) {
 		}
 	}
 }
+

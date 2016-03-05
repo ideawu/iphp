@@ -6,6 +6,7 @@ class App{
 	static $finish = false;
 	static $config = array();
 	static $version = '';
+	static $asset_md5 = '';
 	static $base_url = null;
 
 	// view 的渲染结果先保存在此变量中
@@ -26,9 +27,17 @@ class App{
 	}
 
 	static function init(){
-		$version_file = APP_PATH . '/../md5.json';
-		if(file_exists($version_file)){
-			self::$version = json_decode(@file_get_contents($version_file), true);
+		$md5_file = APP_PATH . '/../assets.json';
+		if(file_exists($md5_file)){
+			self::$asset_md5 = @json_decode(@file_get_contents($md5_file), true);
+			if(!is_array(self::$asset_md5)){
+				self::$asset_md5 = array();
+			}
+		}else{
+			$version_file = APP_PATH . '/../version';
+			if(file_exists($version_file)){
+				self::$version = trim(@file_get_contents($version_file));
+			}
 		}
 		// before any exception
 		self::$context = new Context();
