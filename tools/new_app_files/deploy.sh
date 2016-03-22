@@ -2,16 +2,17 @@
 cur_dir=`old=\`pwd\`; cd \`dirname $0\`; echo \`pwd\`; cd $old;`
 prj=`basename $cur_dir`
 env=$1
+iphp_dir=/data/lib/iphp
+nginx_conf_dir=/etc/nginx/conf.d
+prj_dir=/data/www/$prj
+dep_dir=/data/deploy_www/$prj.dep.`date +%Y%m%d_%H%M%S`
+
 
 if [ -z "$env" ]; then
 	echo "Usage: $0 ENV"
 	echo "    ENV: dev, online"
 	exit 1
 fi
-
-
-prj_dir=/data/www/$prj
-dep_dir=/data/deploy_www/$prj.dep.`date +%Y%m%d_%H%M%S`
 
 
 deploy_dev()
@@ -22,7 +23,7 @@ deploy_dev()
 	rm -f $prj_dir
 	ln -sf $cur_dir $prj_dir
 	ln -sf $cur_dir/app/config/config_${env}.php $cur_dir/app/config/config.php
-	ln -sf $cur_dir/app/config/nginx_${env}.conf /etc/nginx/conf.d/$prj.conf
+	ln -sf $cur_dir/app/config/nginx_${env}.conf $nginx_conf_dir/$prj.conf
 }
 
 deploy_online()
@@ -47,7 +48,7 @@ deploy_online()
 	ln -sf $dep_dir $prj_dir
 
 	ln -sf $prj_dir/app/config/config_${env}.php $prj_dir/app/config/config.php
-	ln -sf $prj_dir/app/config/nginx_${env}.conf /etc/nginx/conf.d/$prj.conf
+	ln -sf $prj_dir/app/config/nginx_${env}.conf $nginx_conf_dir/$prj.conf
 }
 
 
@@ -62,6 +63,19 @@ if [ "$env" = "online" ]; then
 else
 	deploy_dev
 fi
+
+
+# update assets.json
+if [ "$env" = "online" ]; then
+	cd $dep_dir && php $iphp_dir/tools/assets_md5.php js css static
+	if [ $? -eq 0 ]; then
+		echo "update assets.json done."
+	else
+		echo "update assets.json fail! please resolve it!"
+	fi
+	cd $cur_dir
+fi
+# end update assets.json
 
 
 sh $prj_dir/server.sh restart
