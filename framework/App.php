@@ -39,8 +39,6 @@ class App{
 				self::$version = trim(@file_get_contents($version_file));
 			}
 		}
-		// before any exception
-		self::$context = new Context();
 		
 		$config_file = APP_PATH . '/config/config.php';
 		if(!file_exists($config_file)){
@@ -71,8 +69,13 @@ class App{
 	}
 	
 	static function run(){
+		// before any exception
+		self::$context = new Context();
+
 		try{
 			return self::_run();
+		}catch(AppBreakException $e){
+			return;
 		}catch(Exception $e){
 			if(App::$controller && App::$controller->is_ajax){
 				$code = $e->getCode();
@@ -90,25 +93,16 @@ class App{
 		$code = 1;
 		$msg = '';
 		$data = null;
+		
+		if(base_path() == 'index.php'){
+			_redirect('');
+		}
 
 		ob_start();
 		App::init();
 		ob_clean();
-		try{
-			$data = self::execute();
-		}catch(AppBreakException $e){
-			return;
-		}catch(Exception $e){
-			if(App::$controller && App::$controller->is_ajax){
-				$code = $e->getCode();
-				$msg = $e->getMessage();
-				if(!strlen($msg)){
-					$msg = 'error';
-				}
-			}else{
-				return self::error_handle($e);
-			}
-		}
+
+		$data = self::execute();
 		
 		if(App::$controller && App::$controller->is_ajax){
 			$resp = array(
