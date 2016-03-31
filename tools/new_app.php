@@ -62,6 +62,8 @@ function generate(){
 		}
 		file_put_contents($dst, $text);
 	}
+
+	copy(TEMPLATE_DIR . '/.gitignore', $app_dir . '/.gitignore');
 }
 
 function compile_file($file){

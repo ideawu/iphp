@@ -1,0 +1,14 @@
+*.log
+/logs/*.log
+.DS_Store
+.buildpath
+._.DS_Store
+.project
+.settings
+.idea/
+app/config/config.php
+*.swp
+*.less
+/node_modules
+/nbproject/private/
+assets.json
