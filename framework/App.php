@@ -80,6 +80,10 @@ class App{
 			$data = self::_run();
 		}catch(AppBreakException $e){
 			return;
+		}catch(AppRedirectException $e){
+			$url = $e->getMessage();
+			@header("Location: $url", true, $e->getCode());
+			return;
 		}catch(Exception $e){
 			ob_clean();
 			if(App::$controller && App::$controller->is_ajax){
@@ -216,7 +220,7 @@ class App{
 		}else if($code == 403){
 			header('Content-Type: text/html; charset=utf-8', true, 403);
 		}else if($code == 200){
-			//
+			header('Content-Type: text/html; charset=utf-8', true, 200);
 		}else{
 			header('Content-Type: text/html; charset=utf-8', true, 500);
 		}
@@ -260,6 +264,13 @@ class App{
 class AppBreakException extends Exception
 {
 	function __construct($msg='', $code=1){
+		parent::__construct($msg, $code);
+	}
+}
+
+class AppRedirectException extends Exception
+{
+	function __construct($msg='', $code=302){
 		parent::__construct($msg, $code);
 	}
 }
