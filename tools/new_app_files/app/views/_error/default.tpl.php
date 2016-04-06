@@ -7,7 +7,16 @@
 </head>
 <body>
 
-<h1 style="text-align: center;"><?= htmlspecialchars($_e->getMessage()) ?></h1>
+<h1 style="text-align: center;">
+	<?php
+		$msg = htmlspecialchars($_e->getMessage());
+		if(App::$env == 'online' && strpos($msg, 'in SQL:') !== false){
+			Logger::error($_e);
+			$msg = 'db error';
+		}
+		echo ($msg ? $msg : 'server error');
+	?>
+</h1>
 
 <div>
 <?php
