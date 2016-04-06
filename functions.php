@@ -127,8 +127,8 @@ function _redirect($url, $params_or_http_code=array()){
 		$url = _url($url);
 		$http_code = intval($params_or_http_code);
 	}
+	@header("Location: $url", true, $http_code);
 	throw new AppRedirectException($url, $http_code);
-	// @header("Location: $url", true, $http_code);
 	// App::_break();
 }
 
