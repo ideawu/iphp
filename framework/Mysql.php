@@ -292,6 +292,7 @@ class Mysql{
 	}
 
 	function escape_like_string($str){
+		$str = $this->escape($str);
 		$find = array('%', '_');
 		$replace = array('\%', '\_');
 		$str = str_replace($find, $replace, $str);
