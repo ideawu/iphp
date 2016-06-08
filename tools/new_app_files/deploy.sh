@@ -43,12 +43,13 @@ deploy_online()
 	chmod ugo+rx $dep_dir
 
 	echo "create links..."
+	ln -sf $dep_dir/app/config/config_${env}.php $dep_dir/app/config/config.php
+	ln -sf $dep_dir/app/config/nginx_${env}.conf /etc/nginx/conf.d/$prj.conf
 	# 将项目软链到当前版本
-	rm -f $prj_dir
-	ln -sf $dep_dir $prj_dir
-
-	ln -sf $prj_dir/app/config/config_${env}.php $prj_dir/app/config/config.php
-	ln -sf $prj_dir/app/config/nginx_${env}.conf $nginx_conf_dir/$prj.conf
+	tmp_link=${prj_dir}_tmp
+	rm -f $tmp_link
+	ln -sf $dep_dir $tmp_link
+	mv -fT $tmp_link $prj_dir
 }
 
 

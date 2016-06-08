@@ -47,4 +47,34 @@ class Http
 		curl_close($ch) ;
 		return $result;
 	}
+	
+	// 根据 $data 长度自动选择 GET/POST
+	static function request($url, $params=array()){
+		$data = array();
+		$total_len = 0;
+		foreach($params as $k=>$v){
+			$len = strlen($v);
+			$total_len += $len;
+			$is_post_data = false;
+			if($len > 128 || $total_len > 1024){
+				$is_post_data = true;
+			}
+			if($is_post_data){
+				$data[$k] = $v;
+				unset($params[$k]);
+			}
+		}
+		
+		$params = http_build_query($params);
+		if(strpos($url, '?') === false){
+			$url .= '?' . $data;
+		}else{
+			$url .= '&' . $data;
+		}
+		if($data){
+			return self::get($url);
+		}else{
+			return self::post($url, $data);
+		}
+	}
 }
