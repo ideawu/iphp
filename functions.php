@@ -78,9 +78,11 @@ function real_ip(){
 
 function ip(){
 	static $cip = null;
-	if($cip == null){
+	if($cip === null){
 		if($_SERVER["HTTP_X_FORWARDED_FOR"] && $_SERVER["HTTP_X_FORWARDED_FOR"]!='unknown'){
 			$cip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+			$cip = explode(',', $cip);
+			$cip = trim($cip[0]);
 		}else if($_SERVER["REMOTE_ADDR"] && $_SERVER["REMOTE_ADDR"]!='unknown'){
 			$cip = $_SERVER["REMOTE_ADDR"];
 		}else{
