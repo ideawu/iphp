@@ -3,7 +3,7 @@
 # runphp 会进行加锁, 避免一个脚本启动多个实例, 所以可以放心在用 crontab 来执行
 php=php
 php_file=$1
-lock_file=/tmp/runphp_lock.`echo $1 | sed 's/\//_/g' | sed 's/^\.*//'`.lock
+lock_file=/tmp/runphp_lock.`echo $1$2$3 | sed 's/\//_/g' | sed 's/^\.*//'`.lock
 
 #echo "locking file: $lock_file"
 cmd_line="$php $php_file ${@:2}"
