@@ -21,7 +21,7 @@ class Context
 	}
 	
 	// $value = callback($name, $ctx);
-	function lazyload($name, callable $callback_func){
+	function lazyload($name, $callback_func){
 		$this->lazy_regs[$name] = $callback_func;
 	}
 }
