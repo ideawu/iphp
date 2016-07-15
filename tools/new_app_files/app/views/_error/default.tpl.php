@@ -10,7 +10,7 @@
 <h1 style="text-align: center;">
 	<?php
 		$msg = htmlspecialchars($_e->getMessage());
-		if(App::$env == 'online' && strpos($msg, 'in SQL:') !== false){
+		if(strpos($msg, 'in SQL:') !== false || strpos($msg, 'db error') !== false){
 			Logger::error($_e);
 			$msg = 'db error';
 		}

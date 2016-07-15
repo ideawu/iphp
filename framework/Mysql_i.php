@@ -14,10 +14,15 @@ class Mysql_i{
 		if(!isset($c['port'])){
 			$c['port'] = '3306';
 		}
-		$this->conn = new mysqli($c['host'], $c['username'], $c['password'], $c['dbname'], $c['port']);
-		if($this->conn->connect_error){
+		$this->conn = @mysqli_connect($c['host'], $c['username'], $c['password'], $c['dbname'], $c['port']);
+		if(!$this->conn){
+			Logger::error('connect db error: ' . mysqli_connect_error());
 			throw new Exception('connect db error');
 		}
+		// $this->conn = new mysqli($c['host'], $c['username'], $c['password'], $c['dbname'], $c['port']);
+		// if($this->conn->connect_error){
+		// 	throw new Exception('connect db error');
+		// }
 		if($c['charset']){
 			$this->conn->set_charset($c['charset']);
 		}

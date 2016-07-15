@@ -71,10 +71,6 @@ class App{
 	static function run(){
 		// before any exception
 		self::$context = new Context();
-
-		$code = 1;
-		$msg = '';
-		$data = null;
 		
 		try{
 			$data = self::_run();
@@ -86,62 +82,65 @@ class App{
 			return;
 		}catch(Exception $e){
 			ob_clean();
-			if(App::$controller && App::$controller->is_ajax){
-				$code = $e->getCode();
-				$msg = $e->getMessage();
-				if(!strlen($msg)){
-					$msg = 'error';
-				}
-			}else{
-				return self::error_handle($e);
-			}
+			return self::error_handle($e);
 		}
 		
 		if(App::$controller && App::$controller->is_ajax){
-			$resp = array(
-				'code' => $code,
-				'message' => $msg,
-				'data' => $data,
-			);
-			if(defined('JSON_UNESCAPED_UNICODE')){
-				$json = json_encode($resp, JSON_UNESCAPED_UNICODE);
-			}else{
-				$json = json_encode($resp);
-			}
-			$jp = App::$controller->jp;
-			if(!preg_match('/^[a-z0-9_]+$/i', $jp)){
-				$jp = false;
-			}
-			if($jp){
-				echo "$jp($json);";
-			}else{
-				echo $json;
-			}
+			self::ajax_resp(1, '', $data);
 		}else{
-			#var_dump(find_view_and_layout());
-			list($__view, $__layout) = find_view_and_layout();
-			if(!$__view){
-				Logger::trace("No view for " . base_path());
-			}else{
-				Logger::trace("View $__view");
-				$params = App::$context->as_array();
-				extract($params);
-				ob_start();
-				include($__view);
-				self::$view_content = ob_get_clean();
+			self::html_resp();
+		}
+	}
+	
+	static function ajax_resp($code, $msg, $data=null){
+		if($msg === null){
+			$msg = 'error';
+		}
+		$resp = array(
+			'code' => $code,
+			'message' => $msg,
+			'data' => $data,
+		);
+		if(defined('JSON_UNESCAPED_UNICODE')){
+			$json = json_encode($resp, JSON_UNESCAPED_UNICODE);
+		}else{
+			$json = json_encode($resp);
+		}
+		$jp = App::$controller->jp;
+		if(!preg_match('/^[a-z0-9_]+$/i', $jp)){
+			$jp = false;
+		}
+		if($jp){
+			echo "$jp($json);";
+		}else{
+			echo $json;
+		}
+	}
+
+	private static function html_resp(){
+		#var_dump(find_view_and_layout());
+		list($__view, $__layout) = find_view_and_layout();
+		if(!$__view){
+			Logger::trace("No view for " . base_path());
+		}else{
+			Logger::trace("View $__view");
+			$__params = App::$context->as_array();
+			extract($__params);
+			ob_start();
+			include($__view);
+			self::$view_content = ob_get_clean();
+		}
+		
+		if($__layout){
+			Logger::trace("Layout $__layout");
+			$__params = App::$context->as_array();
+			extract($__params);
+			include($__layout);
+		}else{
+			if(App::$controller->layout !== false){
+				Logger::error("No layout for " . base_path());
 			}
-			
-			if($__layout){
-				Logger::trace("Layout $__layout");
-				$params = App::$context->as_array();
-				extract($params);
-				include($__layout);
-			}else{
-				if(App::$controller->layout !== false){
-					Logger::error("No layout for " . base_path());
-				}
-				_view();
-			}
+			_view();
 		}
 	}
 	
@@ -177,7 +176,11 @@ class App{
 	}
 	
 	private static function find_error_page($code){
-		$pages = array($code, 'default');
+		if(App::$controller && App::$controller->is_ajax){
+			$pages = array('ajax');
+		}else{
+			$pages = array($code, 'default');
+		}
 		if(App::$controller){
 			$view_path_list = App::$controller->view_path;
 		}else{
@@ -213,30 +216,45 @@ class App{
 	}
 	
 	static function error_handle($e){
-		$code = $e->getCode() === 0? 200 : $e->getCode();
-		if($code == 404){
+		if(!App::$controller){
 			App::$controller = new Controller();
-			header('Content-Type: text/html; charset=utf-8', true, 404);
-		}else if($code == 403){
-			header('Content-Type: text/html; charset=utf-8', true, 403);
-		}else if($code == 200){
-			header('Content-Type: text/html; charset=utf-8', true, 200);
-		}else{
-			header('Content-Type: text/html; charset=utf-8', true, 500);
 		}
-		$error_page = self::find_error_page($code);
-		if($error_page !== false){
-			$params = App::$context->as_array();
-			$params['_e'] = $e;
-			extract($params);
-			try{
-				include($error_page);
-				return;
-			}catch(Exception $e){
-				//
+			
+		if(App::$controller && App::$controller->is_ajax){
+			//
+		}else{
+			$code = $e->getCode() === 0? 200 : $e->getCode();
+			if($code == 404){
+				header('Content-Type: text/html; charset=utf-8', true, 404);
+			}else if($code == 403){
+				header('Content-Type: text/html; charset=utf-8', true, 403);
+			}else if($code == 200){
+				header('Content-Type: text/html; charset=utf-8', true, 200);
+			}else{
+				header('Content-Type: text/html; charset=utf-8', true, 500);
 			}
 		}
 		
+		$error_page = self::find_error_page($code);
+		if($error_page !== false){
+			$__params = App::$context->as_array();
+			$__params['_e'] = $e;
+			extract($__params);
+			try{
+				include($error_page);
+			}catch(Exception $e){
+				//
+			}
+			return;
+		}
+
+		if(App::$controller && App::$controller->is_ajax){
+			$code = $e->getCode();
+			$msg = $e->getMessage();
+			self::ajax_resp($code, $msg, null);
+			return;
+		}
+
 		$msg = htmlspecialchars($e->getMessage());
 		$html = '';
 		$html .= '<html><head>';
