@@ -66,6 +66,9 @@ class Mysql_i{
 			$this->query_list[] = $log;
 		}
 		#Logger::debug($log);
+		if($time > 200){
+			Logger::debug($log);
+		}
 		return $result;
 	}
 	
