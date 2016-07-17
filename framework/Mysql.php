@@ -167,7 +167,7 @@ class Mysql{
 	 */
 	function load($table, $id, $field='id'){
 		$id = $this->escape($id);
-		$sql = "select * from `{$table}` where `{$field}`='{$id}'";
+		$sql = "select * from `{$table}` where `{$field}`='{$id}' limit 1";
 		$row = $this->get($sql);
 		return $row;
 	}
