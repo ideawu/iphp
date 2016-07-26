@@ -86,16 +86,20 @@ class Html{
 			$url = trim($url, '/');
 			$url = self::base_url() . '/' . $url;
 		}
-		if(App::$asset_md5){
-			if(App::$asset_md5 && !isset($param['_v']) && self::is_static_resource($url)){
+		if(!isset($param['_v']) && self::is_static_resource($url)){
+			if(App::$asset_md5){
 				$relative_path = substr($url, strlen(self::base_url().'/'));
 				if(isset(App::$asset_md5[$relative_path])){
 					$param['_v'] = App::$asset_md5[$relative_path];
 				}
+			}else{
+				if(App::$version){
+					$param['_v'] = App::$version;
+				}
 			}
-		}else{
-			if(App::$version && !isset($param['_v']) && self::is_static_resource($url)){
-				$param['_v'] = App::$version;
+			// dev 环境不走缓存
+			if(defined('ENV') && ENV == 'dev'){
+				$param['_v'] = time();
 			}
 		}
 		if($param){
