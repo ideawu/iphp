@@ -68,14 +68,15 @@ fi
 
 # update assets.json
 if [ "$env" = "online" ]; then
-	cd $dep_dir && php $iphp_dir/tools/assets_md5.php js css static
-	if [ $? -eq 0 ]; then
-		echo "update assets.json done."
-	else
-		echo "update assets.json fail! please resolve it!"
-	fi
-	cd $cur_dir
+	cd $dep_dir
 fi
+php $iphp_dir/tools/assets_md5.php js css static
+if [ $? -eq 0 ]; then
+	echo "update assets.json done."
+else
+	echo "update assets.json fail! please resolve it!"
+fi
+cd $cur_dir
 # end update assets.json
 
 
