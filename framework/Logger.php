@@ -24,7 +24,7 @@ class Logger{
 
 	static function init($config=array()){
 		if(!isset($config['level'])){
-			self::$level = 0;
+			self::$level = self::$max_level;
 		}else if($config['level'] == '*' || strcasecmp($config['level'], 'all') === 0){
 			self::$level = self::$max_level;
 		}else{
@@ -36,6 +36,10 @@ class Logger{
 			}
 		}
 
+		if(!isset($config['dump'])){
+			$config['dump'] = 'file';
+			$config['files']['ALL'] = 'php://stdout';
+		}
 		if(isset($config['dump'])){
 			$ps = explode('|', $config['dump']);
 			if(in_array('file', $ps)){
