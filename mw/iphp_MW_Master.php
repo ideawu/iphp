@@ -17,7 +17,9 @@ class iphp_MW_Master
 			throw new Exception("manager gone");
 		}
 		if($resp['type'] == 'ok'){
-			Logger::debug("master started");
+			#Logger::debug("master started");
+		}else{
+			throw new Exception("bad response");
 		}
 	}
 	
