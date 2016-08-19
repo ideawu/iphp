@@ -3,17 +3,20 @@
 
 class iphp_MW_Manager
 {
-
 	public $link = null;
 	private $master_link = null;
+	private $master_wait = false;
+	private $master_finished = false;
 	private $workers = array();
 	private $job_id = 1;
 	private $jobs = array();
 	private $quit = false;
+	private $job_pending = 0;
 
 	function init(){
 		declare (ticks = 1);
 		pcntl_signal(SIGTERM, array($this, 'sig_term'));
+		pcntl_signal(SIGINT, array($this, 'sig_term'));
 
 		$this->link = new iphp_MW_Link();
 		$this->link->listen('127.0.0.1', 0);
@@ -25,6 +28,13 @@ class iphp_MW_Manager
 			if($this->loop_once() === false){
 				break;
 			}
+		}
+		$this->link->close();
+		if($this->master_link){
+			$this->master_link->close();
+		}
+		foreach($this->workers as $worker){
+			$worker['link']->close();
 		}
 		Logger::debug("quit");
 	}
@@ -65,11 +75,12 @@ class iphp_MW_Manager
 			$read[] = $worker['link']->sock;
 		}
 		
-		$ret = @socket_select($read, $write, $except, 1);
+		#var_dump($read);
+		$ret = @socket_select($read, $write, $except, 1, 200*1000);
 		if($ret === false){
 			return false;
 		}
-		#var_dump($read, $write, $except);
+		#var_dump($read);
 
 		foreach($read as $sock){
 			if($sock == $this->link->sock){
@@ -80,41 +91,75 @@ class iphp_MW_Manager
 				$this->proc_worker($sock);
 			}
 		}
+
+		if($this->master_wait && $this->job_pending == 0){
+			$this->master_wait = false;
+			$this->master_link->send('ok');
+		}
+		if($this->master_finished && $this->job_pending == 0){
+			$this->quit = true;
+		}
 	}
 	
 	private function proc_master(){
-		$req = $this->master_link->recv();
-		if(!$req){
+		$ret = $this->master_link->read();
+		if(!$ret){
 			Logger::debug("master closed");
 			$this->master_link->close();
 			$this->master_link = null;
+			$this->master_finished = true;
 			return;
 		}
-		if($req['type'] == 'job'){
-			$data = $req['data'];
-			$this->jobs[] = array(
-				'id' => $this->job_id ++,
-				'data' => $data,
-			);
-			#Logger::debug("new job");
+		
+		while(1){
+			$req = $this->master_link->recv(false);
+			if(!$req){
+				break;
+			}
+			if($req['type'] == 'job'){
+				$data = $req['data'];
+				$job = array(
+					'id' => $this->job_id ++,
+					'data' => $data,
+				);
+				$this->jobs[] = $job;
+				$this->job_pending ++;
+				#Logger::debug("new job: " . json_encode($job));
+			}else if($req['type'] == 'wait'){
+				#Logger::debug("receive wait");
+				$this->master_wait = true;
+			}
 		}
 	}
 	
 	private function proc_worker($sock){
 		foreach($this->workers as $index=>&$worker){
 			if($worker['link']->sock == $sock){
-				$req = $worker['link']->recv();
-				if(!$req){
-					Logger::debug("worker closed");
-					unset($this->workers[$index]);
-					break;
-				}
-				if($req['type'] == 'result'){
-					$job = $req['data'];
-					$worker['job_pending'] --;
-					#Logger::debug("finish job: " . json_encode($job));
-				}
+				$this->proce_worker_one($index, $worker);
 				break;
+			}
+		}
+	}
+	
+	private function proce_worker_one($index, &$worker){
+		$link = $worker['link'];
+		$ret = $link->read();
+		if(!$ret){
+			Logger::debug("worker closed");
+			unset($this->workers[$index]);
+			return;
+		}
+		
+		while(1){
+			$req = $link->recv(false);
+			if(!$req){
+				break;
+			}
+			if($req['type'] == 'result'){
+				$job = $req['data'];
+				$worker['job_pending'] --;
+				$this->job_pending --;
+				#Logger::debug("finish job: " . json_encode($job));
 			}
 		}
 	}

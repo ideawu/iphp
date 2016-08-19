@@ -16,6 +16,9 @@ class iphp_MW_Worker
 		$this->link->connect($ip, $port);
 		$this->link->send('role', 'worker');
 		$resp = $this->link->recv();
+		if(!$resp){
+			throw new Exception("manager gone");
+		}
 		if($resp['type'] == 'ok'){
 			Logger::debug("worker[{$this->id}] started");
 		}

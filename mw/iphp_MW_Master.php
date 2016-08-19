@@ -15,6 +15,9 @@ class iphp_MW_Master
 		$this->link->connect($ip, $port);
 		$this->link->send('role', 'master');
 		$resp = $this->link->recv();
+		if(!$resp){
+			throw new Exception("manager gone");
+		}
 		if($resp['type'] == 'ok'){
 			Logger::debug("master started");
 		}
@@ -23,7 +26,23 @@ class iphp_MW_Master
 	function add_job($job){
 		$ret = $this->link->send('job', $job);
 		if(!$ret){
-			throw new Exception("a");
+			throw new Exception("manager gone, failed to add job");
+		}
+	}
+	
+	function wait(){
+		$ret = $this->link->send('wait');
+		if(!$ret){
+			throw new Exception("manager gone, failed to wait");
+		}
+		$resp = $this->link->recv();
+		if(!$resp){
+			throw new Exception("manager gone");
+		}
+		if($resp['type'] == 'ok'){
+			#Logger::debug("wait return ok");
+		}else{
+			Logger::debug("wait return error: " . json_encode($resp));
 		}
 	}
 

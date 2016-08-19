@@ -28,6 +28,10 @@ abstract class MasterWorker
 		$this->master->add_job($job);
 	}
 	
+	function wait(){
+		$this->master->wait();
+	}
+	
 	function run(){
 		$manager = new iphp_MW_Manager();
 		$manager->init();
@@ -38,6 +42,11 @@ abstract class MasterWorker
 		}
 		
 		$manager->run();
+		
+		// 等待全部子进程结束
+		while(pcntl_wait($status) > 0){
+			//
+		}
 	}
 	
 	private function start_master($manager){
@@ -48,7 +57,11 @@ abstract class MasterWorker
 			#Logger::debug("fork child pid: $pid");
 		}else{
 			$this->master = new iphp_MW_Master($this);
-			$this->master->run($manager);
+			try{
+				$this->master->run($manager);
+			}catch(Exception $e){
+				Logger::debug($e->getMessage());
+			}
 			exit(0); // 显式的 exit 子进程
 		}
 	}
@@ -62,7 +75,11 @@ abstract class MasterWorker
 		}else{
 			$worker = new iphp_MW_Worker($this);
 			$worker->id = $id;
-			$worker->run($manager);
+			try{
+				$worker->run($manager);
+			}catch(Exception $e){
+				Logger::debug($e->getMessage());
+			}
 			exit(0); // 显式的 exit 子进程
 		}
 	}

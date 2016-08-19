@@ -7,9 +7,17 @@ include_once(dirname(__FILE__) . '/MasterWorker.php');
 class MyMasterWorker extends MasterWorker
 {
 	function master(){
-		for($i=0; $i<500; $i++){
+		for($i=0; $i<5; $i++){
+			Logger::debug("add job $i");
 			$this->add_job($i);
+			#$this->wait();
+			#Logger::debug("");
 		}
+		Logger::debug("master add all job");
+		
+		// 当需要在确保所有任务处理完毕后再做其它操作时, 才需要调用 wait
+		// $this->wait();
+		// ...
 	}
 
 	function worker($job){

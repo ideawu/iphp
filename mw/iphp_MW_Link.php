@@ -44,9 +44,9 @@ class iphp_MW_Link
 	}
 
 	function close(){
-		if($this->sock >= 0){
+		if($this->sock){
 			socket_close($this->sock);
-			$this->sock = -1;
+			$this->sock = null;
 		}
 	}
 
@@ -67,10 +67,9 @@ class iphp_MW_Link
 		$buf = @socket_read($this->sock, 8*1024);
 		if($buf === false){
 			return false;
-		}else if($buf === ''){
-			return '';
 		}
 		$this->recv_buf .= $buf;
+		return strlen($buf);
 	}
 
 	/**
@@ -87,7 +86,7 @@ class iphp_MW_Link
 					$ret = $this->read();
 					if($ret === false){
 						return false;
-					}else if($ret === ''){
+					}else if($ret === 0){ // TODO:
 						return null;
 					}
 					continue;
