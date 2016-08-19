@@ -33,7 +33,7 @@ class iphp_MW_Worker
 				break;
 			}
 			if($req['type'] == 'quit'){
-				Logger::debug("receive quit message");
+				#Logger::debug("receive quit message");
 				break;
 			}
 			

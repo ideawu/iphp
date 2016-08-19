@@ -32,6 +32,7 @@ class iphp_MW_Manager
 			$this->master_link->close();
 		}
 		foreach($this->workers as $worker){
+			$worker['link']->send('quit');
 			$worker['link']->close();
 		}
 		#Logger::debug("quit");

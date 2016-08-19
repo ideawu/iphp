@@ -60,7 +60,7 @@ abstract class MasterWorker
 			try{
 				$this->master->run($manager);
 			}catch(Exception $e){
-				Logger::debug($e->getMessage());
+				#Logger::debug($e->getMessage());
 			}
 			exit(0); // 显式的 exit 子进程
 		}
@@ -78,7 +78,7 @@ abstract class MasterWorker
 			try{
 				$worker->run($manager);
 			}catch(Exception $e){
-				Logger::debug($e->getMessage());
+				#Logger::debug($e->getMessage());
 			}
 			exit(0); // 显式的 exit 子进程
 		}
