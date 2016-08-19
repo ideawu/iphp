@@ -21,7 +21,7 @@ class MyMasterWorker extends MasterWorker
 	}
 
 	function worker($job){
-		sleep(1);
+		sleep(2);
 		// ...
 		Logger::debug("process job: " . json_encode($job));
 		return true;

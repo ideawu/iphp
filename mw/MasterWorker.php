@@ -13,12 +13,6 @@ abstract class MasterWorker
 	// 每当一个 job 需要被处理时, 该方法都会被调用一次
 	// 运行于一个单独的进程
 	abstract function worker($job);
-
-	private $master = null;
-	private $num_workers = 1;
-	
-	function __construct(){
-	}
 	
 	function set_num_workers($num){
 		$this->num_workers = $num;
@@ -28,9 +22,13 @@ abstract class MasterWorker
 		$this->master->add_job($job);
 	}
 	
+	// 等待全部已添加的任务处理完毕
 	function wait(){
 		$this->master->wait();
 	}
+
+	private $master = null;
+	private $num_workers = 1;
 	
 	function run(){
 		$manager = new iphp_MW_Manager();
