@@ -1,6 +1,4 @@
 <?php
-/// @require Logger
-
 class iphp_MW_Worker
 {
 	public $id = '';

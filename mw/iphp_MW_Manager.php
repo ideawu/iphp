@@ -1,6 +1,4 @@
 <?php
-/// @require Logger
-
 class iphp_MW_Manager
 {
 	public $link = null;

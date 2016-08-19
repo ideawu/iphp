@@ -1,4 +1,6 @@
 <?php
+/// @require Logger
+
 include_once(dirname(__FILE__) . '/iphp_MW_Link.php');
 include_once(dirname(__FILE__) . '/iphp_MW_Master.php');
 include_once(dirname(__FILE__) . '/iphp_MW_Worker.php');
