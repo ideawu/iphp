@@ -1,5 +1,5 @@
 <?php
-include_once('/data/lib/iphp/framework/Logger.php');
+include_once(dirname(__FILE__) . '/../framework/Logger.php');
 Logger::init();
 
 include_once(dirname(__FILE__) . '/MasterWorker.php');
