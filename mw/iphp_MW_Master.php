@@ -49,5 +49,6 @@ class iphp_MW_Master
 	function run($manager){
 		$this->init($manager->link->ip, $manager->link->port);
 		$this->mw->master();
+		$this->wait();
 	}
 }
