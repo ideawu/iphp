@@ -50,9 +50,7 @@ class App{
 		self::$env = $config['env'];
 
 		Logger::init($config['logger']);
-		if(isset($config['db'])){
-			Db::init($config['db']);
-		}
+		Db::init($config);
 
 		if(get_magic_quotes_gpc()){
 			foreach($_GET as $k=>$v){

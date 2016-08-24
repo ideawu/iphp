@@ -9,11 +9,13 @@ class Mysql_i{
 	var $query_list = array();
 	public $query_count = 0;
 	var $readonly = false;
+	private $dbname = '';
 
 	public function __construct($c){
 		if(!isset($c['port'])){
 			$c['port'] = '3306';
 		}
+		$this->dbname = $c['dbname'];
 		$this->conn = @mysqli_connect($c['host'], $c['username'], $c['password'], $c['dbname'], $c['port']);
 		if(!$this->conn){
 			Logger::error('connect db error: ' . mysqli_connect_error());
@@ -61,11 +63,11 @@ class Mysql_i{
 		$etime = microtime(true);
 		$time = number_format(($etime - $stime) * 1000, 2);
 		$ro = $this->readonly? '[RO]' : '[RW]';
-		$log = "{$ro} {$time} $sql";
+		$log = "{$this->dbname} {$ro} {$time} $sql";
 		if(defined('ENV') && ENV == 'dev'){
 			$this->query_list[] = $log;
 		}
-		#Logger::debug($log);
+		Logger::debug($log);
 		if($time > 200){
 			Logger::debug($log);
 		}
@@ -179,7 +181,7 @@ class Mysql_i{
 	 * 保存一条记录, 调用后, id被设置.
 	 * @param object $row
 	 */
-	function save($table, &$row){
+	function save($table, $row){
 		$row = $this->escape($row);
 		$sqlA = array();
 		foreach($row as $k=>$v){
@@ -202,14 +204,14 @@ class Mysql_i{
 				$row['id'] = $this->last_insert_id();
 			}
 		}
-		return $ret;
+		return $row;
 	}
 
 	/**
 	 * 保存一条记录, 调用后, id被设置.
 	 * @param object $row
 	 */
-	function replace($table, &$row){
+	function replace($table, $row){
 		$row = $this->escape($row);
 		$sqlA = array();
 		foreach($row as $k=>$v){
@@ -228,7 +230,7 @@ class Mysql_i{
 		}else if(is_array($row)){
 			$row['id'] = $this->last_insert_id();
 		}
-		return $ret;
+		return $row;
 	}
 
 	/**
@@ -237,7 +239,7 @@ class Mysql_i{
 	 * @return int 影响的行数.
 	 * @param string $field 字段名, 默认为'id'.
 	 */
-	function update($table, &$row, $field='id'){
+	function update($table, $row, $field='id'){
 		$row = $this->escape($row);
 		$sqlA = array();
 		foreach($row as $k=>$v){
@@ -270,18 +272,18 @@ class Mysql_i{
 		return $this->query($sql);
 	}
 
-	function escape(&$val){
+	function escape($val){
 		if($val === NULL){
 			//
 		}else if(is_object($val) || is_array($val)){
-			$this->escape_row($val);
+			$val = $this->escape_row($val);
 		}else if(is_string($val)){
 			$val = $this->conn->real_escape_string($val);
 		}
 		return $val;
 	}
 
-	function escape_row(&$row){
+	function escape_row($row){
 		if(is_object($row)){
 			foreach($row as $k=>$v){
 				$row->$k = $this->escape($v);

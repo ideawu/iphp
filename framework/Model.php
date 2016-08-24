@@ -39,7 +39,7 @@ class Model
 	}
 
 	static function get($id){
-		$row = self::db()->load(static::table(), $id);
+		$row = Db::load(static::table(), $id);
 		if(!$row){
 			return null;
 		}
@@ -73,7 +73,7 @@ class Model
 		$table = self::table();
 		$ret = array();
 		$sql = "select * from $table order by id";
-		$rows = self::db()->find($sql);
+		$rows = Db::find($sql);
 		foreach($rows as $k=>$v){
 			$ret[] = self::_model($v);
 		}
@@ -98,9 +98,9 @@ class Model
 
 		$ds = array();
 		$sql = "select count(*) from $table $where";
-		$ds['total'] = self::db()->count($sql);
+		$ds['total'] = Db::count($sql);
 		$sql = "select * from $table $where $order $limit";
-		$ds['items'] = self::db()->find($sql);
+		$ds['items'] = Db::find($sql);
 		foreach($ds['items'] as $k=>$v){
 			$ds['items'][$k] = self::_model($v);
 		}
@@ -108,7 +108,7 @@ class Model
 	}
 	
 	static function save($attrs){
-		Db::save_row(self::table(), $attrs);
+		$attrs = Db::save_row(self::table(), $attrs);
 		$ret = self::get($attrs['id']);
 		if(!$ret){
 			throw new Exception("无法写入数据库");
@@ -148,7 +148,7 @@ class Model
 	
 	static function get_by($field, $val){
 		$table = self::table();
-		$row = self::db()->load($table, $val, $field);
+		$row = Db::load($table, $val, $field);
 		if(!$row){
 			return null;
 		}
@@ -167,7 +167,7 @@ class Model
 		$limit = "limit $start, $size";
 		$table = self::table();
 		$sql = "select * from $table $where $order $limit";
-		$ret = self::db()->find($sql);
+		$ret = Db::find($sql);
 		foreach($ret as $k=>$v){
 			$ret[$k] = self::_model($v);
 		}

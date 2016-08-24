@@ -17,4 +17,6 @@ return array(
 		'password' => '123456',
 		'charset' => 'utf8',
 	),
+	// usage: Db::use_db('my');
+	//'db_my' => ...
 );

@@ -1,117 +1,48 @@
 <?php
-require_once(dirname(__FILE__) . '/Mysql_i.php');
+/*
+Use for multiple-dbs:
+1. config
+	'db_my' => array()
+2. php
+	Db::use_db('my');
+*/
 
+/*
+Db 类: 实现多个数据库的选择, 并以静态方法形式调用
+DbInstance 类: 对应单个数据库, 同时实现读写分离
+Mysql_i 类: 数据库连接(可建立只读连接), 所有对数据库的操作均通过此类
+*/
+
+// Db 类是为了方便使用 DbInstance, DbInstance 支持的所有实例方法,
+// 均可作为本类的静态方法调用.
 class Db{
-	private static $config = array();
-	private static $readonly = false;
-	private static $load_balance = false;
+	private static $app_config = array();
+	private static $instances = array();
+	private static $current_dbname = '';
 
 	function __construct(){
 		throw new Exception("Static class");
 	}
 
-	static function init($config=array()){
-		self::$config = $config;
+	static function init($app_config=array()){
+		self::$app_config = $app_config;
 	}
 	
-	static function load_balance($yesno=true){
-		self::$load_balance = $yesno;
-		self::$readonly = $yesno;
-	}
-	
-	static function readonly($yesno=true){
-		self::$load_balance = false;
-		self::$readonly = $yesno;
-	}
-	
-	static function is_readonly(){
-		return self::$readonly;
-	}
-	
-	private static $readonly_vars = array();
-	
-	static function push_readonly($yesno){
-		self::$readonly_vars[] = self::$readonly;
-		self::readonly($yesno);
-	}
-	
-	static function pop_readonly(){
-		if(!self::$readonly_vars){
-			throw new Exception("No vars to pop from readonly_vars!");
-		}
-		$yesno = array_pop(self::$readonly_vars);
-		self::readonly($yesno);
-		return $yesno;
+	static function use_db($dbname=''){
+		self::$current_dbname = $dbname;
 	}
 
 	static function instance(){
-		if(self::$readonly){
-			static $readonly_db = null;
-			if($readonly_db === null){
-				if(isset(self::$config['readonly_db'])){
-					$readonly_db = new Mysql_i(self::$config['readonly_db']);
-					$readonly_db->readonly = true;
-				}
-			}			
-			if($readonly_db){
-				return $readonly_db;
-			}
+		$dbname = self::$current_dbname;
+		$key = $dbname? "db_{$dbname}" : 'db';
+		if(!isset(self::$app_config[$key])){
+			_throw("no config for db: $dbname");
 		}
-		static $db = null;
-		if($db === null){
-			$db = new Mysql_i(self::$config);
+		if(!isset(self::$instances[$dbname])){
+			$instance = new DbInstance(self::$app_config[$key]);
+			self::$instances[$dbname] = $instance;
 		}
-		return $db;
-	}
-	
-	static function query($sql){
-		if(self::$load_balance){
-			if(Mysql_i::is_write_query($sql)){
-				self::readonly(false);
-			}
-		}
-		return self::instance()->query($sql);
-	}
-	
-	static function begin(){
-		self::readonly(false);
-		return self::instance()->begin();
-	}
-	
-	static function save_row($table, &$attrs){
-		self::readonly(false);
-		$ret = self::instance()->save($table, $attrs);
-		return $ret;
-	}
-
-	static function update_row($table, $id, $attrs){
-		self::readonly(false);
-		$attrs['id'] = $id;
-		$ret = self::instance()->update($table, $attrs);
-		return $ret;
-	}
-
-	static function delete_row($table, $id){
-		self::readonly(false);
-		return self::instance()->remove($table, $id);
-	}
-	
-	static function update($sql){
-		self::readonly(false);
-		self::query($sql);
-		return self::instance()->affected_rows();
-	}
-	
-	static function get_num($sql){
-		return self::instance()->get_num($sql);
-	}
-	
-	static function escape($val){
-		return self::instance()->escape($val);
-	}
-	
-	static function escape_like_string($val){
-		return self::instance()->escape_like_string($val);
+		return self::$instances[$dbname];
 	}
 
 	static function __callStatic($cmd, $params=array()){
