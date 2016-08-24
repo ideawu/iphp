@@ -118,20 +118,7 @@ function _widget($name, $params=array()){
 
 // $$params_or_http_code: array | int
 function _redirect($url, $params_or_http_code=array()){
-	if(App::$controller){
-		App::$controller->layout = false;
-	}
-	App::$finish = true;
-	$http_code = 302;
-	if(is_array($params_or_http_code)){
-		$url = _url($url, $params_or_http_code);
-	}else{
-		$url = _url($url);
-		$http_code = intval($params_or_http_code);
-	}
-	@header("Location: $url", true, $http_code);
-	throw new AppRedirectException($url, $http_code);
-	// App::_break();
+	App::redirect($url, $params_or_http_code);
 }
 
 function _image($url){
