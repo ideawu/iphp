@@ -118,7 +118,7 @@ function _widget($name, $params=array()){
 
 // $$params_or_http_code: array | int
 function _redirect($url, $params_or_http_code=array()){
-	App::redirect($url, $params_or_http_code);
+	App::_redirect($url, $params_or_http_code);
 }
 
 function _image($url){
