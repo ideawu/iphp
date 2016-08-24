@@ -67,7 +67,7 @@ class Mysql_i{
 		if(defined('ENV') && ENV == 'dev'){
 			$this->query_list[] = $log;
 		}
-		Logger::debug($log);
+		#Logger::debug($log);
 		if($time > 200){
 			Logger::debug($log);
 		}
