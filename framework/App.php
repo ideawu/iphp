@@ -27,6 +27,12 @@ class App{
 	}
 
 	static function init(){
+		static $inited = false;
+		if($inited){
+			return;
+		}
+		$inited = true;
+		
 		$md5_file = APP_PATH . '/../assets.json';
 		if(file_exists($md5_file)){
 			self::$asset_md5 = @json_decode(@file_get_contents($md5_file), true);

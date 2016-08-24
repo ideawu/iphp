@@ -1,8 +1,8 @@
 <?php
-include_once(dirname(__FILE__) . '/../framework/Logger.php');
+include_once(dirname(__FILE__) . '/../Logger.php');
 Logger::init();
 
-include_once(dirname(__FILE__) . '/MasterWorker.php');
+include_once(dirname(__FILE__) . '/../MasterWorker.php');
 
 class MyMasterWorker extends MasterWorker
 {

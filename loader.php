@@ -1,6 +1,6 @@
 <?php
 define('APP_TIME_START', microtime(true));
-
+define('IPHP_PATH', dirname(__FILE__));
 include_once(dirname(__FILE__) . '/functions.php');
 
 $AUTOLOAD_PATH =  array(
@@ -23,6 +23,10 @@ function __autoload($cls){
 #		throw new Exception("Class $cls not found!");
 #	}
 }
+
+// init application
+App::init();
+
 
 function include_paths(){
 	static $paths = array();
