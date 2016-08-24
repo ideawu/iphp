@@ -15,7 +15,7 @@ function __autoload($cls){
 		$file = $dir . '/' . $cls . '.php';
 		if(file_exists($file)){
 			require_once($file);
-			break;
+			return;
 		}
 	}
 	// 有很多代码会使用 class_exists(), 需要和它们兼容, 所以不能在这里 throw
