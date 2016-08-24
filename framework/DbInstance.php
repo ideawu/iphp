@@ -101,4 +101,19 @@ class DbInstance
 	function __call($cmd, $params=array()){
 		return call_user_func_array(array($this->connection(), $cmd), $params);
 	}
+	
+	function __get($name){
+		if($name == 'query_count'){
+			$ret = 0;
+			if($this->master){
+				$ret += $this->master->query_count;
+			}
+			if($this->slave){
+				$ret += $this->slave->query_count;
+			}
+			return $ret;
+		}else{
+			return $this->$name;
+		}
+	}
 }
