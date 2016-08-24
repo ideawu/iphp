@@ -1,7 +1,7 @@
 <?php
 // 实现数据库的读写分离
 // Mysql_i 所支持的全部实例方法, 均可作为本类的实例方法调用.
-class DbInstance
+class iphp_DbInstance
 {
 	private $config = array();
 	private $master = null;

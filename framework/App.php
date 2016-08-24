@@ -9,9 +9,6 @@ class App{
 	static $asset_md5 = array();
 	static $base_url = null;
 
-	// view 的渲染结果先保存在此变量中
-	static $view_content = '';
-
 	static function host(){
 		$host = $_SERVER['HTTP_HOST'];
 		$port = $_SERVER['SERVER_PORT'];
@@ -74,7 +71,7 @@ class App{
 	
 	static function run(){
 		// before any exception
-		self::$context = new Context();
+		self::$context = new iphp_Context();
 		
 		try{
 			$data = self::_run();
@@ -86,65 +83,13 @@ class App{
 			return;
 		}catch(Exception $e){
 			ob_clean();
-			return self::error_handle($e);
+			return iphp_Response::error($e);
 		}
 		
 		if(App::$controller && App::$controller->is_ajax){
-			self::ajax_resp(1, '', $data);
+			iphp_Response::ajax(1, '', $data);
 		}else{
-			self::html_resp();
-		}
-	}
-	
-	static function ajax_resp($code, $msg, $data=null){
-		if($msg === null){
-			$msg = 'error';
-		}
-		$resp = array(
-			'code' => $code,
-			'message' => $msg,
-			'data' => $data,
-		);
-		if(defined('JSON_UNESCAPED_UNICODE')){
-			$json = json_encode($resp, JSON_UNESCAPED_UNICODE);
-		}else{
-			$json = json_encode($resp);
-		}
-		$jp = App::$controller->jp;
-		if(!preg_match('/^[a-z0-9_]+$/i', $jp)){
-			$jp = false;
-		}
-		if($jp){
-			echo "$jp($json);";
-		}else{
-			echo $json;
-		}
-	}
-
-	private static function html_resp(){
-		#var_dump(find_view_and_layout());
-		list($__view, $__layout) = find_view_and_layout();
-		if(!$__view){
-			Logger::trace("No view for " . base_path());
-		}else{
-			Logger::trace("View $__view");
-			$__params = App::$context->as_array();
-			extract($__params);
-			ob_start();
-			include($__view);
-			self::$view_content = ob_get_clean();
-		}
-		
-		if($__layout){
-			Logger::trace("Layout $__layout");
-			$__params = App::$context->as_array();
-			extract($__params);
-			include($__layout);
-		}else{
-			if(App::$controller->layout !== false){
-				Logger::error("No layout for " . base_path());
-			}
-			_view();
+			iphp_Response::html();
 		}
 	}
 	
@@ -162,7 +107,7 @@ class App{
 	}
 
 	private static function execute(){
-		$route = route();
+		$route = iphp_Router::route();
 		list($base, $controller, $action) = $route;
 		App::$controller = $controller;
 
@@ -179,107 +124,39 @@ class App{
 		throw new AppBreakException();
 	}
 	
-	private static function find_error_page($code){
-		if(App::$controller && App::$controller->is_ajax){
-			$pages = array('ajax');
-		}else{
-			$pages = array($code, 'default');
-		}
-		if(App::$controller){
-			$view_path_list = App::$controller->view_path;
-		}else{
-			$view_path_list = array('views');
-		}
-
-		$path = base_path();
-		foreach($view_path_list as $view_path){
-			$ps = explode('/', $path);
-			while(1){
-				$base = join('/', $ps);
-				if($ps){
-					$dir = APP_PATH . "/$view_path/$base";
-				}else{
-					$dir = APP_PATH . "/$view_path";
-				}
-
-				foreach($pages as $page){
-					$file = "$dir/_error/{$page}.tpl.php";
-					#echo $file . "\n<br/>";
-					if(file_exists($file)){
-						return $file;
-					}
-				}
-				
-				if(!$ps){
-					break;
-				}
-				array_pop($ps);
-			}
-		}
-		return false;
-	}
-	
-	static function error_handle($e){
-		if(!App::$controller){
-			App::$controller = new Controller();
-		}
-			
-		if(App::$controller && App::$controller->is_ajax){
-			//
-		}else{
-			$code = $e->getCode() === 0? 200 : $e->getCode();
-			if($code == 404){
-				header('Content-Type: text/html; charset=utf-8', true, 404);
-			}else if($code == 403){
-				header('Content-Type: text/html; charset=utf-8', true, 403);
-			}else if($code == 200){
-				header('Content-Type: text/html; charset=utf-8', true, 200);
+	static function include_paths(){
+		static $paths = array();
+		if(!$paths){
+			$path = base_path();
+			if(strlen($path) == 0){
+				$ps = array('index');
 			}else{
-				header('Content-Type: text/html; charset=utf-8', true, 500);
+				$ps = explode('/', $path);
+			}
+			$act = $ps[count($ps) - 1];
+			if($act == 'new'){
+				$act = 'create';
+			}
+			$paths[] = array(
+				'base' => join('/', array_slice($ps, 0, -1)),
+				'action' => $act,
+			);
+			$paths[] = array(
+				'base' => join('/', $ps),
+				'action' => 'index',
+			);
+			if($act != 'index'){
+				$paths[] = array(
+					'base' => join('/', $ps) . '/index',
+					'action' => 'index',
+				);
+				$paths[] = array(
+					'base' => join('/', array_slice($ps, 0, -1)) . '/index',
+					'action' => $act,
+				);
 			}
 		}
-		
-		$error_page = self::find_error_page($code);
-		if($error_page !== false){
-			$__params = App::$context->as_array();
-			$__params['_e'] = $e;
-			extract($__params);
-			try{
-				include($error_page);
-			}catch(Exception $e){
-				//
-			}
-			return;
-		}
-
-		if(App::$controller && App::$controller->is_ajax){
-			$code = $e->getCode();
-			$msg = $e->getMessage();
-			self::ajax_resp($code, $msg, null);
-			return;
-		}
-
-		$msg = htmlspecialchars($e->getMessage());
-		$html = '';
-		$html .= '<html><head>';
-		$html .= '<meta charset="UTF-8"/>';
-		$html .= "<title>$msg</title>\n";
-		$html .= "<style>body{font-size: 14px; font-family: monospace;}</style>\n";
-		$html .= "</head><body>\n";
-		$html .= "<h1 style=\"text-align: center;\">$msg</h1>";
-		if(self::$env == 'dev'){
-			$ts = $e->getTrace();
-			foreach($ts as $t){
-				$html .= "{$t['file']}:{$t['line']} {$t['function']}()<br/>\n";
-			}
-		}
-		$html .= '<p style="
-			margin-top: 20px;
-			padding-top: 10px;
-			border-top: 1px solid #ccc;
-			text-align: center;">iphp</p>';
-		$html .= '</body></html>';
-		echo "$html\n";
+		return $paths;
 	}
 }
 

@@ -95,7 +95,7 @@ function ip(){
 }
 
 function _view(){
-	echo App::$view_content;
+	iphp_Response::output();
 }
 
 function _widget($name, $params=array()){

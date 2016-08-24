@@ -1,5 +1,5 @@
 <?php
-class Context
+class iphp_Context
 {
 	private $lazy_regs = array();
 	

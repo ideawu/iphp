@@ -9,11 +9,11 @@ Use for multiple-dbs:
 
 /*
 Db 类: 实现多个数据库的选择, 并以静态方法形式调用
-DbInstance 类: 对应单个数据库, 同时实现读写分离
+iphp_DbInstance 类: 对应单个数据库, 同时实现读写分离
 Mysql_i 类: 数据库连接(可建立只读连接), 所有对数据库的操作均通过此类
 */
 
-// Db 类是为了方便使用 DbInstance, DbInstance 支持的所有实例方法,
+// Db 类是为了方便使用 iphp_DbInstance, iphp_DbInstance 支持的所有实例方法,
 // 均可作为本类的静态方法调用.
 class Db{
 	private static $app_config = array();
@@ -39,7 +39,7 @@ class Db{
 			_throw("no config for db: $dbname");
 		}
 		if(!isset(self::$instances[$dbname])){
-			$instance = new DbInstance(self::$app_config[$key]);
+			$instance = new iphp_DbInstance(self::$app_config[$key]);
 			self::$instances[$dbname] = $instance;
 		}
 		return self::$instances[$dbname];
