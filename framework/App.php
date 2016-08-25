@@ -23,6 +23,11 @@ class App{
 		self::$base_url = $base_url;
 	}
 
+	// 兼容老代码
+	static function ajax_resp($code, $msg, $data=null){
+		return iphp_Response::ajax($code, $msg, $data);
+	}
+
 	static function init(){
 		static $inited = false;
 		if($inited){
