@@ -87,8 +87,11 @@ class App{
 			@header("Location: $url", true, $e->getCode());
 			return;
 		}catch(Exception $e){
-			ob_clean();
 			return iphp_Response::error($e);
+		}
+		
+		if(App::$finish){
+			return;
 		}
 		
 		if(App::$controller && App::$controller->is_ajax){
@@ -104,14 +107,18 @@ class App{
 		}
 
 		ob_start();
-		App::init();
+		try{
+			App::init();
+		}catch(Exception $e){
+			ob_clean();
+			throw $e;
+		}
 		ob_clean();
 
-		$data = self::execute();
-		return $data;
-	}
-
-	private static function execute(){
+		if(App::$finish){
+			return;
+		}
+		
 		$route = iphp_Router::route();
 		list($base, $controller, $action) = $route;
 		App::$controller = $controller;
@@ -120,6 +127,11 @@ class App{
 		if(self::$finish){
 			return null;
 		}
+		
+		if(App::$finish){
+			return;
+		}
+		
 		$ret = $controller->$action(App::$context);
 		return $ret;
 	}
