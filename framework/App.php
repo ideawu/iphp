@@ -116,7 +116,7 @@ class App{
 		ob_clean();
 
 		if(App::$finish){
-			return;
+			return null;
 		}
 		
 		$route = iphp_Router::route();
@@ -124,12 +124,9 @@ class App{
 		App::$controller = $controller;
 
 		$controller->init(App::$context);
-		if(self::$finish){
-			return null;
-		}
 		
 		if(App::$finish){
-			return;
+			return null;
 		}
 		
 		$ret = $controller->$action(App::$context);
