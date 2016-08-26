@@ -141,6 +141,9 @@ class App{
 			$url = _url($url);
 			$http_code = intval($params_or_http_code);
 		}
+		// 某些代码在 try-catch 里执行 _redirect, 所以要输出 header, 以让
+		// 那些代码能工作
+		@header("Location: $url", true, $http_code);
 		throw new AppRedirectException($url, $http_code);
 	}
 	
