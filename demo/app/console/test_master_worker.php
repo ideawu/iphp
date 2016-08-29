@@ -9,7 +9,7 @@ class MyMasterWorker extends MasterWorker
 		for($i=0; $i<100; $i++){
 			#Logger::debug("add job $i");
 			$this->add_job($i);
-			#$this->wait();
+			#$this->wait(); // 如果每添加一个任务便 wait 的话, 将无法实现并发!
 			#Logger::debug("");
 		}
 		Logger::debug("master added all $i jobs");
