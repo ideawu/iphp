@@ -35,7 +35,7 @@ class iphp_MW_Manager
 			$worker['link']->send('quit');
 			$worker['link']->close();
 		}
-		Logger::debug("quit");
+		Logger::debug("manager quit");
 	}
 
 	function sig_term($sig){
@@ -104,7 +104,7 @@ class iphp_MW_Manager
 	private function proc_master(){
 		$ret = $this->master_link->read();
 		if(!$ret){
-			Logger::debug("master closed");
+			#Logger::debug("master closed");
 			$this->master_link->close();
 			$this->master_link = null;
 			$this->master_finished = true;

@@ -51,5 +51,6 @@ class iphp_MW_Master
 		$this->init($manager->link->ip, $manager->link->port);
 		$this->mw->master();
 		$this->wait();
+		Logger::debug("master quit");
 	}
 }
