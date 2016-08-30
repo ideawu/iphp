@@ -33,7 +33,6 @@ class iphp_MW_Worker
 				break;
 			}
 			if($req['type'] == 'quit'){
-				Logger::debug("receive quit message");
 				break;
 			}
 			
@@ -50,8 +49,10 @@ class iphp_MW_Worker
 			);
 			$ret = $this->link->send('result', $result);
 			if(!$ret){
+				Logger::debug("worker[{$this->id}] send result error.");
 				break;
 			}
 		}
+		Logger::debug("worker[{$this->id}] quit");
 	}
 }
