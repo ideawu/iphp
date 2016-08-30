@@ -17,7 +17,7 @@ class iphp_MW_Master
 			throw new Exception("manager gone");
 		}
 		if($resp['type'] == 'ok'){
-			#Logger::debug("master started");
+			Logger::debug("master started");
 		}else{
 			throw new Exception("bad response");
 		}
@@ -31,6 +31,7 @@ class iphp_MW_Master
 	}
 	
 	function wait(){
+		Logger::debug("send wait");
 		$ret = $this->link->send('wait');
 		if(!$ret){
 			throw new Exception("manager gone, failed to wait");
@@ -40,7 +41,7 @@ class iphp_MW_Master
 			throw new Exception("manager gone");
 		}
 		if($resp['type'] == 'ok'){
-			#Logger::debug("wait return ok");
+			Logger::debug("wait return ok");
 		}else{
 			Logger::debug("wait return error: " . json_encode($resp));
 		}

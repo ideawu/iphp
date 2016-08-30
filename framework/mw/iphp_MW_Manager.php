@@ -35,7 +35,7 @@ class iphp_MW_Manager
 			$worker['link']->send('quit');
 			$worker['link']->close();
 		}
-		#Logger::debug("quit");
+		Logger::debug("quit");
 	}
 
 	function sig_term($sig){
@@ -93,6 +93,7 @@ class iphp_MW_Manager
 
 		if($this->master_wait && $this->job_pending == 0){
 			$this->master_wait = false;
+			Logger::debug("wait finish");
 			$this->master_link->send('ok');
 		}
 		if($this->master_finished && $this->job_pending == 0){
@@ -103,7 +104,7 @@ class iphp_MW_Manager
 	private function proc_master(){
 		$ret = $this->master_link->read();
 		if(!$ret){
-			#Logger::debug("master closed");
+			Logger::debug("master closed");
 			$this->master_link->close();
 			$this->master_link = null;
 			$this->master_finished = true;
@@ -125,7 +126,7 @@ class iphp_MW_Manager
 				$this->job_pending ++;
 				#Logger::debug("new job: " . json_encode($job));
 			}else if($req['type'] == 'wait'){
-				#Logger::debug("receive wait");
+				Logger::debug("receive wait");
 				$this->master_wait = true;
 			}
 		}
@@ -144,7 +145,7 @@ class iphp_MW_Manager
 		$link = $worker['link'];
 		$ret = $link->read();
 		if(!$ret){
-			#Logger::debug("worker closed");
+			Logger::debug("worker closed");
 			unset($this->workers[$index]);
 			return;
 		}
@@ -168,12 +169,12 @@ class iphp_MW_Manager
 		$req = $link->recv();
 		if($req['type'] == 'role'){
 			if($req['data'] == 'master'){
-				#Logger::debug("master connected from {$link->ip}:{$link->port}");
+				Logger::debug("master connected from {$link->ip}:{$link->port}");
 				$this->master_link = $link;
 				$link->send('ok');
 			}
 			if($req['data'] == 'worker'){
-				#Logger::debug("worker connected from {$link->ip}:{$link->port}");
+				Logger::debug("worker connected from {$link->ip}:{$link->port}");
 				$this->workers[] = array(
 					'link' => $link,
 					'job_pending' => 0,

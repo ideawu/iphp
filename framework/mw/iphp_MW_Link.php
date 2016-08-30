@@ -20,7 +20,9 @@ class iphp_MW_Link
 
 	function connect($ip, $port){
 		$sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-		socket_connect($sock, $ip, $port);
+		if(!@socket_connect($sock, $ip, $port)){
+			return false;
+		}
 
 		$this->sock = $sock;
 		$this->ip = $ip;
@@ -45,6 +47,7 @@ class iphp_MW_Link
 
 	function close(){
 		if($this->sock){
+			@socket_shutdown($this->sock);
 			socket_close($this->sock);
 			$this->sock = null;
 		}

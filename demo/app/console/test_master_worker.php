@@ -16,6 +16,7 @@ class MyMasterWorker extends MasterWorker
 		
 		// 当需要在确保所有任务处理完毕后再做其它操作时, 才需要调用 wait
 		$this->wait();
+		sleep(2);
 		// ...
 		Logger::debug("all job done");
 	}
