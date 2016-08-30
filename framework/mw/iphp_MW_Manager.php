@@ -169,12 +169,12 @@ class iphp_MW_Manager
 		$req = $link->recv();
 		if($req['type'] == 'role'){
 			if($req['data'] == 'master'){
-				Logger::debug("master connected from {$link->ip}:{$link->port}");
+				#Logger::debug("master connected from {$link->ip}:{$link->port}");
 				$this->master_link = $link;
 				$link->send('ok');
 			}
 			if($req['data'] == 'worker'){
-				Logger::debug("worker connected from {$link->ip}:{$link->port}");
+				#Logger::debug("worker connected from {$link->ip}:{$link->port}");
 				$this->workers[] = array(
 					'link' => $link,
 					'job_pending' => 0,
