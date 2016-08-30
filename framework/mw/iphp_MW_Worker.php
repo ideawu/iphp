@@ -18,7 +18,7 @@ class iphp_MW_Worker
 			throw new Exception("manager gone");
 		}
 		if($resp['type'] == 'ok'){
-			Logger::debug("worker[{$this->id}] started");
+			//Logger::debug("worker[{$this->id}] started");
 		}else{
 			throw new Exception("bad response");
 		}
@@ -53,6 +53,6 @@ class iphp_MW_Worker
 				break;
 			}
 		}
-		Logger::debug("worker[{$this->id}] quit");
+		//Logger::debug("worker[{$this->id}] quit");
 	}
 }

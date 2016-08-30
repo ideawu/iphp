@@ -35,7 +35,7 @@ class iphp_MW_Manager
 			$worker['link']->send('quit');
 			$worker['link']->close();
 		}
-		Logger::debug("manager quit");
+		//Logger::debug("manager quit");
 	}
 
 	function sig_term($sig){
@@ -93,7 +93,7 @@ class iphp_MW_Manager
 
 		if($this->master_wait && $this->job_pending == 0){
 			$this->master_wait = false;
-			Logger::debug("wait finish");
+			//Logger::debug("wait finish");
 			$this->master_link->send('ok');
 		}
 		if($this->master_finished && $this->job_pending == 0){
@@ -126,7 +126,7 @@ class iphp_MW_Manager
 				$this->job_pending ++;
 				#Logger::debug("new job: " . json_encode($job));
 			}else if($req['type'] == 'wait'){
-				Logger::debug("receive wait");
+				//Logger::debug("receive wait");
 				$this->master_wait = true;
 			}
 		}
@@ -145,7 +145,7 @@ class iphp_MW_Manager
 		$link = $worker['link'];
 		$ret = $link->read();
 		if(!$ret){
-			Logger::debug("worker closed");
+			//Logger::debug("worker closed");
 			unset($this->workers[$index]);
 			return;
 		}
