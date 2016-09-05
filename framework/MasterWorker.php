@@ -51,7 +51,7 @@ abstract class MasterWorker
 			usleep(10 * 1000);
 			$wait_secs = microtime(1) - $stime;
 			if($wait_secs > 10 || $wait_secs < -10){
-				Logger::debug("wait to long, forced to kill all processes");
+				Logger::debug("wait to long, force to kill all processes");
 				foreach($this->pids as $pid){
 					posix_kill($pid, SIGKILL);
 				}
