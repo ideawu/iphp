@@ -7,7 +7,7 @@ include_once(dirname(__FILE__) . '/../MasterWorker.php');
 class MyMasterWorker extends MasterWorker
 {
 	function master(){
-		for($i=0; $i<100; $i++){
+		for($i=0; $i<30; $i++){
 			#Logger::debug("add job $i");
 			$this->add_job($i);
 			#$this->wait(); // 如果每添加一个任务便 wait 的话, 将无法实现并发!

@@ -27,13 +27,15 @@ class iphp_MW_Manager
 				break;
 			}
 		}
-		$this->link->close();
-		if($this->master_link){
-			$this->master_link->close();
-		}
 		foreach($this->workers as $worker){
 			$worker['link']->send('quit');
 			$worker['link']->close();
+		}
+
+		$this->link->close();
+
+		if($this->master_link){
+			$this->master_link->close();
 		}
 		//Logger::debug("manager quit");
 	}

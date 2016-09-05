@@ -31,12 +31,14 @@ abstract class MasterWorker
 
 	private $master = null;
 	private $num_workers = 1;
+	private $pids = array();
 	
 	function run(){
 		$manager = new iphp_MW_Manager();
 		$manager->init();
 		
 		$this->start_master($manager);
+		usleep(100 * 1000);
 		for($i=0; $i<$this->num_workers; $i++){
 			$this->start_worker($manager, $i);
 		}
@@ -44,8 +46,17 @@ abstract class MasterWorker
 		$manager->run();
 		
 		// 等待全部子进程结束
+		$stime = microtime(1);
 		while(pcntl_wait($status) > 0){
-			//
+			usleep(10 * 1000);
+			$wait_secs = microtime(1) - $stime;
+			if($wait_secs > 10 || $wait_secs < -10){
+				Logger::debug("wait to long, forced to kill all processes");
+				foreach($this->pids as $pid){
+					posix_kill($pid, SIGKILL);
+				}
+				break;
+			}
 		}
 	}
 	
@@ -54,6 +65,7 @@ abstract class MasterWorker
 		if($pid < 0){
 			//
 		}else if($pid > 0){
+			$this->pids[] = $pid;
 			#Logger::debug("fork child pid: $pid");
 		}else{
 			$this->master = new iphp_MW_Master($this);
@@ -71,6 +83,7 @@ abstract class MasterWorker
 		if($pid < 0){
 			//
 		}else if($pid > 0){
+			$this->pids[] = $pid;
 			#Logger::debug("fork child pid: $pid");
 		}else{
 			$worker = new iphp_MW_Worker($this);
