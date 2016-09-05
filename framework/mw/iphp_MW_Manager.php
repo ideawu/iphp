@@ -56,6 +56,10 @@ class iphp_MW_Manager
 			}
 		}
 	}
+	
+	// 如果 300s 内 master/worker 都空闲, 则认为系统异常, 退出 
+	private $max_idle_time = 300;
+	private $last_active_time = 0;
 
 	private function loop_once(){
 		$this->dispatch_jobs();
@@ -81,7 +85,19 @@ class iphp_MW_Manager
 		if($ret === false){
 			return false;
 		}
-		#var_dump($read);
+		
+		// 异常空闲检测
+		if($this->last_active_time === 0){
+			$this->last_active_time = time();
+		}
+		if($ret === 0){ // timeout
+			if(time() - $this->last_active_time > $this->max_idle_time){
+				Logger::error("master/workers idle too long, force quit");
+				return false;
+			}
+		}else{
+			$this->last_active_time = time();
+		}
 
 		foreach($read as $sock){
 			if($sock == $this->link->sock){
