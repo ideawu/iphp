@@ -9,45 +9,47 @@ class Text
 		if(defined('JSON_UNESCAPED_UNICODE')){
 			return json_encode($input, JSON_UNESCAPED_UNICODE | $opt);
 		}else{
-			return json_encode($input, $opt);
+			# 某些系统不支持转义过的中文, 所以需要自己拼JSON, 支持 JSON_UNESCAPED_UNICODE
+			#return json_encode($input, $opt);
 		}
-		// if(is_string($input)){
-		// 	$text = $input;
-		// 	$text = str_replace('\\', '\\\\', $text);
-		// 	$text = str_replace(
-		// 		array("\r", "\n", "\t", "\""),
-		// 		array('\r', '\n', '\t', '\\"'),
-		// 		$text);
-		// 	return '"' . $text . '"';
-		// }else if($input === null){
-		// 	return 'null';
-		// }else if($input === true){
-		// 	return 'true';
-		// }else if($input === false){
-		// 	return 'false';
-		// }else if(is_array($input) || is_object($input)){
-		// 	$arr = array();
-		// 	$is_obj = is_object($input) || (array_keys($input) !== range(0, count($input) - 1));
-		// 	foreach($input as $k=>$v){
-		// 		if($is_obj){
-		// 			// 数据的key如果是整数, PHP会自动将其强制转换成int型
-		// 			// 而int型没有引号, 是错误的JSON语法
-		// 			if(!is_string($k)){
-		// 				$k .= "";
-		// 			}
-		// 			$arr[] = self::json_encode($k) . ':' . self::json_encode($v);
-		// 		}else{
-		// 			$arr[] = self::json_encode($v);
-		// 		}
-		// 	}
-		// 	if($is_obj){
-		// 		return '{' . join(',', $arr) . '}';
-		// 	}else{
-		// 		return '[' . join(',', $arr) . ']';
-		// 	}
-		// }else{
-		// 	return $input . '';
-		// }
+		
+		if(is_string($input)){
+			$text = $input;
+			$text = str_replace('\\', '\\\\', $text);
+			$text = str_replace(
+				array("\r", "\n", "\t", "\""),
+				array('\r', '\n', '\t', '\\"'),
+				$text);
+			return '"' . $text . '"';
+		}else if($input === null){
+			return 'null';
+		}else if($input === true){
+			return 'true';
+		}else if($input === false){
+			return 'false';
+		}else if(is_array($input) || is_object($input)){
+			$arr = array();
+			$is_obj = is_object($input) || (array_keys($input) !== range(0, count($input) - 1));
+			foreach($input as $k=>$v){
+				if($is_obj){
+					// 数据的key如果是整数, PHP会自动将其强制转换成int型
+					// 而int型没有引号, 是错误的JSON语法
+					if(!is_string($k)){
+						$k .= "";
+					}
+					$arr[] = self::json_encode($k) . ':' . self::json_encode($v);
+				}else{
+					$arr[] = self::json_encode($v);
+				}
+			}
+			if($is_obj){
+				return '{' . join(',', $arr) . '}';
+			}else{
+				return '[' . join(',', $arr) . ']';
+			}
+		}else{
+			return $input . '';
+		}
 	}
 	
 	static function xml_to_obj($str){
