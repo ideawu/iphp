@@ -7,7 +7,7 @@ class Text
 	
 	static function json_encode($input, $opt=0){
 		if(defined('JSON_UNESCAPED_UNICODE')){
-			return json_encode($input, JSON_UNESCAPED_UNICODE | $opt);
+			return json_encode($input, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | $opt);
 		}else{
 			# 某些系统不支持转义过的中文, 所以需要自己拼JSON, 支持 JSON_UNESCAPED_UNICODE
 			#return json_encode($input, $opt);
