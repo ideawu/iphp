@@ -31,6 +31,7 @@ class Text
 		// 	foreach($input as $k=>$v){
 		// 		if($is_obj){
 		// 			// 数据的key如果是整数, PHP会自动将其强制转换成int型
+		// 			// 而int型没有引号, 是错误的JSON语法
 		// 			if(!is_string($k)){
 		// 				$k .= "";
 		// 			}
