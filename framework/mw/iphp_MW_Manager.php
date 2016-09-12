@@ -138,6 +138,7 @@ class iphp_MW_Manager
 				$data = $req['data'];
 				$job = array(
 					'id' => $this->job_id ++,
+					'time' => microtime(1),
 					'data' => $data,
 				);
 				$this->jobs[] = $job;
@@ -177,7 +178,8 @@ class iphp_MW_Manager
 				$job = $req['data'];
 				$worker['job_pending'] --;
 				$this->job_pending --;
-				#Logger::debug("finish job: " . json_encode($job));
+				$use_time = sprintf('%.2f', microtime(1) - $job['time']);
+				#Logger::debug("finish job: {$job['id']}, use_time: $use_time, result: " . json_encode($job['result']));
 			}
 		}
 	}

@@ -46,6 +46,7 @@ class iphp_MW_Worker
 			
 			$result = array(
 				'id' => $job['id'],
+				'time' => $job['time'],
 				'result' => $ret,
 			);
 			$ret = $this->link->send('result', $result);
