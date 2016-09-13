@@ -34,12 +34,16 @@ abstract class MasterWorker
 		$this->master->wait();
 	}
 
+	private $name = '';
 	private $master = null;
 	private $manager = null;
 	private $num_workers = 1;
 	private $pids = array();
 	
 	function __construct(){
+		global $argv;
+		$this->name = basename($argv[0]);
+		
 		$this->manager = new iphp_MW_Manager();
 		$this->master = new iphp_MW_Master($this);
 	}
@@ -61,7 +65,7 @@ abstract class MasterWorker
 			usleep(10 * 1000);
 			$wait_secs = microtime(1) - $stime;
 			if($wait_secs > 10 || $wait_secs < -10){
-				Logger::debug("wait to long, force to kill all processes");
+				Logger::debug("[{$this->name}] wait to long, force to kill all processes");
 				foreach($this->pids as $pid){
 					posix_kill($pid, SIGKILL);
 				}
@@ -76,12 +80,12 @@ abstract class MasterWorker
 			//
 		}else if($pid > 0){
 			$this->pids[] = $pid;
-			#Logger::debug("fork child pid: $pid");
+			#Logger::debug("[{$this->name}] fork child pid: $pid");
 		}else{
 			try{
 				$this->master->run($manager);
 			}catch(Exception $e){
-				#Logger::debug($e->getMessage());
+				#Logger::debug("[{$this->name}] " . $e->getMessage());
 			}
 			exit(0); // 显式的 exit 子进程
 		}
@@ -93,14 +97,14 @@ abstract class MasterWorker
 			//
 		}else if($pid > 0){
 			$this->pids[] = $pid;
-			#Logger::debug("fork child pid: $pid");
+			#Logger::debug("[{$this->name}] fork child pid: $pid");
 		}else{
 			$worker = new iphp_MW_Worker($this);
 			$worker->id = $id;
 			try{
 				$worker->run($manager);
 			}catch(Exception $e){
-				#Logger::debug($e->getMessage());
+				#Logger::debug("[{$this->name}] " . $e->getMessage());
 			}
 			exit(0); // 显式的 exit 子进程
 		}

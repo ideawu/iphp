@@ -3,8 +3,11 @@ class iphp_MW_Master
 {
 	public $link = null;
 	private $mw = null;
+	private $name = '';
 	
 	function __construct($mw){
+		global $argv;
+		$this->name = basename($argv[0]);
 		$this->mw = $mw;
 	}
 
@@ -17,7 +20,7 @@ class iphp_MW_Master
 			throw new Exception("manager gone");
 		}
 		if($resp['type'] == 'ok'){
-			//Logger::debug("master started");
+			//Logger::debug("[{$this->name}] master started");
 		}else{
 			throw new Exception("bad response");
 		}
@@ -31,7 +34,7 @@ class iphp_MW_Master
 	}
 	
 	function wait(){
-		//Logger::debug("send wait");
+		//Logger::debug("[{$this->name}] send wait");
 		$ret = $this->link->send('wait');
 		if(!$ret){
 			throw new Exception("manager gone, failed to wait");
@@ -41,9 +44,9 @@ class iphp_MW_Master
 			throw new Exception("manager gone");
 		}
 		if($resp['type'] == 'ok'){
-			//Logger::debug("wait return ok");
+			//Logger::debug("[{$this->name}] wait return ok");
 		}else{
-			Logger::debug("wait return error: " . json_encode($resp));
+			Logger::debug("[{$this->name}] wait return error: " . json_encode($resp));
 		}
 	}
 
@@ -51,6 +54,6 @@ class iphp_MW_Master
 		$this->init($manager->link->ip, $manager->link->port);
 		$this->mw->master();
 		$this->wait();
-		//Logger::debug("master quit");
+		//Logger::debug("[{$this->name}] master quit");
 	}
 }

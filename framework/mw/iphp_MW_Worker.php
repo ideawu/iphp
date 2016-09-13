@@ -4,8 +4,11 @@ class iphp_MW_Worker
 	public $id = '';
 	public $link = null;
 	private $mw = null;
+	private $name = '';
 	
 	function __construct($mw){
+		global $argv;
+		$this->name = basename($argv[0]);
 		$this->mw = $mw;
 	}
 
@@ -18,7 +21,7 @@ class iphp_MW_Worker
 			throw new Exception("manager gone");
 		}
 		if($resp['type'] == 'ok'){
-			//Logger::debug("worker[{$this->id}] started");
+			//Logger::debug("[{$this->name}] worker[{$this->id}] started");
 		}else{
 			throw new Exception("bad response");
 		}
@@ -33,12 +36,12 @@ class iphp_MW_Worker
 				break;
 			}
 			if($req['type'] == 'quit'){
-				#Logger::debug("receive quit");
+				#Logger::debug("[{$this->name}] receive quit");
 				break;
 			}
 			
 			$job = $req['data'];
-			#Logger::debug("process job: " . json_encode($job));
+			#Logger::debug("[{$this->name}] process job: " . json_encode($job));
 			
 			// process job...
 			#sleep(mt_rand(1, 2));
@@ -51,10 +54,10 @@ class iphp_MW_Worker
 			);
 			$ret = $this->link->send('result', $result);
 			if(!$ret){
-				Logger::debug("worker[{$this->id}] send result error.");
+				Logger::debug("[{$this->name}] worker[{$this->id}] send result error.");
 				break;
 			}
 		}
-		//Logger::debug("worker[{$this->id}] quit");
+		//Logger::debug("[{$this->name}] worker[{$this->id}] quit");
 	}
 }
