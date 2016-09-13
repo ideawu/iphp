@@ -32,7 +32,7 @@ class MyMasterWorker extends MasterWorker
 
 $mw = new MyMasterWorker();
 $mw->set_num_workers(3);
-$mw->set_max_idle_time(2);
+//$mw->set_max_idle_time(2);
 $mw->run();
 
 
