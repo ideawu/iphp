@@ -19,6 +19,11 @@ abstract class MasterWorker
 	function set_num_workers($num){
 		$this->num_workers = $num;
 	}
+	
+	// 默认 300 秒
+	function set_max_idle_time($secs){
+		$this->manager->set_max_idle_time($secs);
+	}
 
 	function add_job($job){
 		$this->master->add_job($job);
@@ -30,20 +35,25 @@ abstract class MasterWorker
 	}
 
 	private $master = null;
+	private $manager = null;
 	private $num_workers = 1;
 	private $pids = array();
 	
+	function __construct(){
+		$this->manager = new iphp_MW_Manager();
+		$this->master = new iphp_MW_Master($this);
+	}
+	
 	function run(){
-		$manager = new iphp_MW_Manager();
-		$manager->init();
+		$this->manager->init();
 		
-		$this->start_master($manager);
+		$this->start_master($this->manager);
 		usleep(100 * 1000);
 		for($i=0; $i<$this->num_workers; $i++){
-			$this->start_worker($manager, $i);
+			$this->start_worker($this->manager, $i);
 		}
 		
-		$manager->run();
+		$this->manager->run();
 		
 		// 等待全部子进程结束
 		$stime = microtime(1);
@@ -68,7 +78,6 @@ abstract class MasterWorker
 			$this->pids[] = $pid;
 			#Logger::debug("fork child pid: $pid");
 		}else{
-			$this->master = new iphp_MW_Master($this);
 			try{
 				$this->master->run($manager);
 			}catch(Exception $e){

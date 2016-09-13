@@ -61,6 +61,10 @@ class iphp_MW_Manager
 	private $max_idle_time = 300;
 	private $last_active_time = 0;
 
+	function set_max_idle_time($secs){
+		$this->max_idle_time = $secs;
+	}
+
 	private function loop_once(){
 		$this->dispatch_jobs();
 
