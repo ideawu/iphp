@@ -18,7 +18,6 @@ class iphp_MW_Manager
 	}
 
 	function init(){
-		var_dump($this->name);
 		declare (ticks = 1);
 		pcntl_signal(SIGTERM, array($this, 'sig_term'));
 		pcntl_signal(SIGINT, array($this, 'sig_term'));
