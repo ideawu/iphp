@@ -25,6 +25,8 @@ abstract class MasterWorker
 		$this->manager->set_max_idle_time($secs);
 	}
 
+	// @param array|int|string job
+	// 注意: 不能传对象
 	function add_job($job){
 		$this->master->add_job($job);
 	}
@@ -85,7 +87,7 @@ abstract class MasterWorker
 			try{
 				$this->master->run($manager);
 			}catch(Exception $e){
-				#Logger::debug("[{$this->name}] " . $e->getMessage());
+				Logger::debug("[{$this->name}] " . $e->getMessage());
 			}
 			exit(0); // 显式的 exit 子进程
 		}
@@ -104,7 +106,7 @@ abstract class MasterWorker
 			try{
 				$worker->run($manager);
 			}catch(Exception $e){
-				#Logger::debug("[{$this->name}] " . $e->getMessage());
+				Logger::debug("[{$this->name}] " . $e->getMessage());
 			}
 			exit(0); // 显式的 exit 子进程
 		}

@@ -27,6 +27,9 @@ class iphp_MW_Master
 	}
 	
 	function add_job($job){
+		if(is_object($job)){
+			throw new Exception("job must not be PHP object!");
+		}
 		$ret = $this->link->send('job', $job);
 		if(!$ret){
 			throw new Exception("manager gone, failed to add job");
