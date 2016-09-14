@@ -55,7 +55,11 @@ class iphp_MW_Master
 
 	function run($manager){
 		$this->init($manager->link->ip, $manager->link->port);
-		$this->mw->master();
+		try{
+			$this->mw->master();
+		}catch(Exception $e){
+			Logger::error("[{$this->name}] master throw exception: " . $e->getMessage());
+		}
 		$this->wait();
 		//Logger::debug("[{$this->name}] master quit");
 	}

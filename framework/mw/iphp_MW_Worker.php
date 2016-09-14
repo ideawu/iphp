@@ -45,11 +45,19 @@ class iphp_MW_Worker
 			
 			// process job...
 			#sleep(mt_rand(1, 2));
-			$ret = $this->mw->worker($job['data']);
+			$error = '';
+			try{
+				$ret = $this->mw->worker($job['data']);
+			}catch(Exception $e){
+				$ret = false;
+				$error = $e->getMessage();
+				Logger::error("[{$this->name}] worker throw exception: " . $e->getMessage());
+			}
 			
 			$result = array(
 				'id' => $job['id'],
 				'time' => $job['time'],
+				'error' => $error,
 				'result' => $ret,
 			);
 			$ret = $this->link->send('result', $result);

@@ -22,7 +22,10 @@ class MyMasterWorker extends MasterWorker
 	}
 
 	function worker($job){
-		usleep(mt_rand(2, 6) * 1000 * 1000);
+		if(mt_rand(0, 4) == 0){
+			throw new Exception('worker exception');
+		}
+		usleep(mt_rand(2, 6) * 100 * 1000);
 		// ...
 		$pid = posix_getpid();
 		Logger::debug("[$pid] process job: " . json_encode($job));
@@ -32,7 +35,7 @@ class MyMasterWorker extends MasterWorker
 
 $mw = new MyMasterWorker();
 $mw->set_num_workers(3);
-//$mw->set_max_idle_time(2);
+$mw->set_max_idle_time(2);
 $mw->run();
 
 
