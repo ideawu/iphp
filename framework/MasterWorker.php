@@ -106,7 +106,7 @@ abstract class MasterWorker
 			try{
 				$worker->run($manager);
 			}catch(Exception $e){
-				Logger::debug("[{$this->name}] " . $e->getMessage());
+				#Logger::debug("[{$this->name}] " . $e->getMessage());
 			}
 			exit(0); // 显式的 exit 子进程
 		}
