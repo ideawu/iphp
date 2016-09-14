@@ -22,7 +22,7 @@ class MyMasterWorker extends MasterWorker
 	}
 
 	function worker($job){
-		if(mt_rand(0, 4) == 0){
+		if(mt_rand(0, 10) == 0){
 			throw new Exception('worker exception');
 		}
 		usleep(mt_rand(2, 6) * 100 * 1000);

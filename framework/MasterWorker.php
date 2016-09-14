@@ -54,7 +54,6 @@ abstract class MasterWorker
 		$this->manager->init();
 		
 		$this->start_master($this->manager);
-		usleep(100 * 1000);
 		for($i=0; $i<$this->num_workers; $i++){
 			$this->start_worker($this->manager, $i);
 		}
@@ -84,6 +83,11 @@ abstract class MasterWorker
 			$this->pids[] = $pid;
 			#Logger::debug("[{$this->name}] fork child pid: $pid");
 		}else{
+			// 子进程 dup 了 socket, 所以要关闭
+			if($this->manager->link){
+				$this->manager->link->close();
+			}
+			
 			try{
 				$this->master->run($manager);
 			}catch(Exception $e){
@@ -101,9 +105,14 @@ abstract class MasterWorker
 			$this->pids[] = $pid;
 			#Logger::debug("[{$this->name}] fork child pid: $pid");
 		}else{
-			$worker = new iphp_MW_Worker($this);
-			$worker->id = $id;
+			// 子进程 dup 了 socket, 所以要关闭
+			if($this->manager->link){
+				$this->manager->link->close();
+			}
+			
 			try{
+				$worker = new iphp_MW_Worker($this);
+				$worker->id = $id;
 				$worker->run($manager);
 			}catch(Exception $e){
 				#Logger::debug("[{$this->name}] " . $e->getMessage());
