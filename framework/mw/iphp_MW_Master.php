@@ -62,5 +62,8 @@ class iphp_MW_Master
 		}
 		$this->wait();
 		//Logger::debug("[{$this->name}] master quit");
+		// 当空任务时, master 会立即退出, 导致 woker 启动过程失败,
+		// 虽然无影响, 但最好让 worker 启动成功后正常退出. 所以在这里等待一下.
+		usleep(200 * 1000);
 	}
 }
