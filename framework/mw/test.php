@@ -27,7 +27,11 @@ class MyMasterWorker extends MasterWorker
 		}
 		usleep(mt_rand(2, 6) * 100 * 1000);
 		// ...
-		$pid = posix_getpid();
+		if(function_exists('posix_getpid')){
+			$pid = posix_getpid();
+		}else{
+			$pid = 0;
+		}
 		Logger::debug("[$pid] process job: " . json_encode($job));
 		return true;
 	}
