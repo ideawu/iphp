@@ -196,6 +196,9 @@ class iphp_MW_Manager
 	
 	private function proc_connect(){
 		$link = $this->link->accept();
+		if(!$link){
+			return;
+		}
 		$req = $link->recv();
 		if($req['type'] == 'role'){
 			if($req['data'] == 'master'){

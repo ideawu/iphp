@@ -14,7 +14,9 @@ class iphp_MW_Worker
 
 	function init($ip, $port){
 		$this->link = new iphp_MW_Link();
-		$this->link->connect($ip, $port);
+		if(!$this->link->connect($ip, $port)){
+			throw new Exception("could not connect to manager");
+		}
 		$this->link->send('role', 'worker');
 		$resp = $this->link->recv();
 		if(!$resp){

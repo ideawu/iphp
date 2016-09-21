@@ -32,7 +32,7 @@ class iphp_MW_Link
 	}
 
 	function accept(){
-		$sock = socket_accept($this->sock);
+		$sock = @socket_accept($this->sock);
 		if(!$sock){
 			return null;
 		}
