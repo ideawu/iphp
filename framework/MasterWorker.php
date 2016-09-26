@@ -58,7 +58,11 @@ abstract class MasterWorker
 			$this->start_worker($this->manager, $i);
 		}
 		
-		$this->manager->run();
+		try{
+			$this->manager->run();
+		}catch(Exception $e){
+			Logger::debug("[{$this->name}] " . $e->getMessage());
+		}
 		
 		// 等待全部子进程结束
 		$stime = microtime(1);

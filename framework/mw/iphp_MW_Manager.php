@@ -197,7 +197,7 @@ class iphp_MW_Manager
 	private function proc_connect(){
 		$link = $this->link->accept();
 		if(!$link){
-			return;
+			throw new Exception("accept failed");
 		}
 		$req = $link->recv();
 		if($req['type'] == 'role'){
