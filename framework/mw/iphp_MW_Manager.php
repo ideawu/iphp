@@ -102,7 +102,7 @@ class iphp_MW_Manager
 		}
 		if($ret === 0){ // timeout
 			if(time() - $this->last_active_time > $this->max_idle_time){
-				Logger::error("[{$this->name}] master/workers idle too long, force quit");
+				Logger::info("[{$this->name}] master/workers idle too long, force quit");
 				return false;
 			}
 		}else{
