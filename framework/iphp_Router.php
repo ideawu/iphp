@@ -17,7 +17,7 @@ class iphp_Router
 		if(!$controller){
 			$path = base_path();
 			Logger::trace("No route for $path!");
-			throw new App404Exception("404 - Not Found!", 404);
+			throw new App404Exception();
 		}
 		return array($base, $controller, $action);
 	}
