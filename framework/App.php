@@ -208,7 +208,7 @@ class AppRedirectException extends Exception
 
 class App404Exception extends Exception
 {
-	function __construct($msg='404 Not found'){
+	function __construct($msg='404 - Not Found'){
 		parent::__construct($msg, 404);
 	}
 }
