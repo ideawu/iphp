@@ -169,28 +169,34 @@ function _action($action='', $m=null, $module=null){
 	}
 }
 
-function _new_url(){
-	return _action('new');
+function _new_url($params=array()){
+	return _action('new', $params);
 }
 
-function _save_url(){
-	return _action('save');
+function _save_url($params=array()){
+	return _action('save', $params);
 }
 
-function _list_url(){
-	return _action('list');
+function _list_url($params=array()){
+	return _action('list', $params);
 }
 
-function _view_url($m){
-	return _action('view', $m);
+function _view_url($m, $params=array()){
+	if(is_object($m)){
+		$params['id'] = $m->id;
+	}
+	return _action('view', $params);
 }
 
-function _edit_url($m){
-	return _action('edit', $m);
+function _edit_url($m, $params=array()){
+	if(is_object($m)){
+		$params['id'] = $m->id;
+	}
+	return _action('edit', $params);
 }
 
-function _update_url(){
-	return _action('update');
+function _update_url($params=array()){
+	return _action('update', $params);
 }
 
 function _days_from_now($date){
