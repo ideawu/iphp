@@ -3,6 +3,8 @@ define('APP_TIME_START', microtime(true));
 define('IPHP_PATH', dirname(__FILE__));
 include_once(dirname(__FILE__) . '/functions.php');
 
+mb_internal_encoding("UTF-8");
+
 $AUTOLOAD_PATH =  array(
 	dirname(__FILE__) . '/framework',
 	APP_PATH . '/models',
