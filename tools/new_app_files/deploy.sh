@@ -70,7 +70,7 @@ fi
 if [ "$env" = "online" ]; then
 	cd $dep_dir
 fi
-php $iphp_dir/tools/assets_md5.php js css static
+php $iphp_dir/tools/assets_md5.php js css imgs static
 if [ $? -eq 0 ]; then
 	echo "update assets.json done."
 else
