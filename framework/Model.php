@@ -55,8 +55,14 @@ class Model
 		$where = "id in ($in)";
 		$tmp = self::find(0, count($ids), $where);
 		$ret = array();
-		foreach($tmp as $v){
-			$ret[$v->id] = $v;
+		// 要求顺序，所以重新组织一便
+		foreach($ids as $id){
+			foreach($tmp as $v){
+				if($v->id == $id){
+					$ret[$v->id] = $v;
+					break;
+				}
+			}
 		}
 		return $ret;
 	}
