@@ -18,7 +18,7 @@
 
 在你想建立项目的目录底下, 执行:
 
-	php <somewhere>/tools/new_app.php
+	php <iphp_framework>/tools/new_app.php
 
 这是执行效果:
 
@@ -39,6 +39,8 @@ sh server.sh restart
 ```
 
 # Nginx 配置
+
+__默认情况下每一个 App 是独立的域名, 部署完成后, 通过你创建项目时的域名进行访问. 如果 App 是作为别的域名下的某个路径, 那么需要进行下面的配置.__
 
 在已配置了 PHP 的情况下, 你只需要简单添加下面的内容到你的 nginx.conf 里, 然后重启 nginx 即可.
 
