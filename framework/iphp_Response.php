@@ -187,7 +187,7 @@ class iphp_Response
 	private static function find_view(){
 		foreach(App::include_paths() as $path){
 			// 由 Controller 指定模板的名字
-			if(App::$controller->action && App::$controller->action != 'index'){
+			if(App::$controller->action){
 				$action = App::$controller->action;
 			}else{
 				$action = $path['action'];
