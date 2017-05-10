@@ -184,6 +184,8 @@ function _list_url($params=array()){
 function _view_url($m, $params=array()){
 	if(is_object($m)){
 		$params['id'] = $m->id;
+	}else if(is_array($m)){
+		$params = $m + $params;
 	}
 	return _action('view', $params);
 }
@@ -191,6 +193,8 @@ function _view_url($m, $params=array()){
 function _edit_url($m, $params=array()){
 	if(is_object($m)){
 		$params['id'] = $m->id;
+	}else if(is_array($m)){
+		$params = $m + $params;
 	}
 	return _action('edit', $params);
 }
