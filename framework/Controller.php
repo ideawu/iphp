@@ -6,6 +6,8 @@ class Controller
 	public $layout = '';
 	public $is_ajax = false;
 	public $view_path = array('views');
+	// 默认不设置, 根据 App::include_paths() 的返回值决定要显示的 view
+	public $_render_view = '';
 
 	function init($ctx){
 	}
