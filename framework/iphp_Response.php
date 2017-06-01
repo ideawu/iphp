@@ -187,8 +187,8 @@ class iphp_Response
 	private static function find_view(){
 		foreach(App::include_paths() as $path){
 			// 由 Controller 指定模板的名字
-			if(App::$controller->action){
-				$action = App::$controller->action;
+			if(App::$controller->_render_view){
+				$action = App::$controller->_render_view;
 			}else{
 				$action = $path['action'];
 			}
@@ -200,6 +200,8 @@ class iphp_Response
 				}else{
 					$file = $dir . "/$action.tpl.php";
 				}
+				#echo 'DIR: ' . $dir . "\n";
+				#echo $file . "\n";
 				if(file_exists($file)){
 					return array($view_path, $file);
 				}

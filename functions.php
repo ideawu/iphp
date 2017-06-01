@@ -143,7 +143,7 @@ function _kvs($arr_arr, $k_attr, $v_attr){
 }
 
 function _render($name){
-	App::$controller->action = $name;
+	App::$controller->_render_view = $name;
 }
 
 /**

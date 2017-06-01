@@ -183,7 +183,7 @@ class App{
 					'action' => 'index',
 				);
 				$paths[] = array(
-					'base' => join('/', array_slice($ps, 0, -1)) . '/index',
+					'base' => ltrim(join('/', array_slice($ps, 0, -1)) . '/index', '/'),
 					'action' => $act,
 				);
 			}
