@@ -14,12 +14,17 @@ class Logger{
 	private static $max_level = 7;
 	private static $dump = 0;
 	private static $config;
+	private static $escape = true;
 
 	const DUMP_FILE = 1;
 	const DUMP_HTML = 2;
 
 	public function __construct(){
 		throw new Exception("Static class");
+	}
+	
+	static function escape($yesno){
+		self::$escape = $yesno;
 	}
 
 	static function init($config=array()){
@@ -97,8 +102,10 @@ class Logger{
 			$usec = substr(sprintf('%03d', $usec), 0, 3);
 			$time = date("Y-m-d H:i:s.{$usec}", $sec);
 			$msg = $log->msg;
-			$msg = preg_replace('/[ \r\n\t]*\n[ \r\n\t]*/', ' ', $msg);
-			$msg = preg_replace('/[ \r\n\t]+/', ' ', $msg);
+			if(self::$escape){
+				$msg = preg_replace('/[ \r\n\t]*\n[ \r\n\t]*/', ' ', $msg);
+				$msg = preg_replace('/[ \r\n\t]+/', ' ', $msg);
+			}
 
 			if($_SERVER["HTTP_CLIENT_IP"] && $_SERVER["HTTP_CLIENT_IP"]!='unknown'){
 				$cip = $_SERVER["HTTP_CLIENT_IP"];
