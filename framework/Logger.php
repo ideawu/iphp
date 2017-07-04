@@ -15,6 +15,7 @@ class Logger{
 	private static $dump = 0;
 	private static $config;
 	private static $escape = true;
+	private static $showip = true;
 
 	const DUMP_FILE = 1;
 	const DUMP_HTML = 2;
@@ -25,6 +26,10 @@ class Logger{
 	
 	static function escape($yesno){
 		self::$escape = $yesno;
+	}
+	
+	static function showip($yesno){
+		self::$showip = $yesno;
 	}
 
 	static function init($config=array()){
@@ -107,23 +112,28 @@ class Logger{
 				$msg = preg_replace('/[ \r\n\t]+/', ' ', $msg);
 			}
 
-			if($_SERVER["HTTP_CLIENT_IP"] && $_SERVER["HTTP_CLIENT_IP"]!='unknown'){
-				$cip = $_SERVER["HTTP_CLIENT_IP"];
-			}else if($_SERVER["HTTP_X_FORWARDED_FOR"] && $_SERVER["HTTP_X_FORWARDED_FOR"]!='unknown'){
-				$cip = $_SERVER["HTTP_X_FORWARDED_FOR"];
-			}else if($_SERVER["REMOTE_ADDR"] && $_SERVER["REMOTE_ADDR"]!='unknown'){
-				$cip = $_SERVER["REMOTE_ADDR"];
+			if(self::$showip){
+				if($_SERVER["HTTP_CLIENT_IP"] && $_SERVER["HTTP_CLIENT_IP"]!='unknown'){
+					$cip = $_SERVER["HTTP_CLIENT_IP"];
+				}else if($_SERVER["HTTP_X_FORWARDED_FOR"] && $_SERVER["HTTP_X_FORWARDED_FOR"]!='unknown'){
+					$cip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+				}else if($_SERVER["REMOTE_ADDR"] && $_SERVER["REMOTE_ADDR"]!='unknown'){
+					$cip = $_SERVER["REMOTE_ADDR"];
+				}else{
+					$cip = "0.0.0.0";
+				}
+				$cip = explode(',', $cip);
+				$cip = trim($cip[count($cip) - 1]);
+				$cip = " [{$cip}]";
 			}else{
-				$cip = "0.0.0.0";
+				$cip = '';
 			}
-			$cip = explode(',', $cip);
-			$cip = trim($cip[count($cip) - 1]);
 
 			$bt = debug_backtrace(false);
 			$c_file = basename($bt[2]['file']);
 			$c_line = $bt[2]['line'];
 
-			$line = sprintf("%s [%-5s] [%s] [%s:%s] %s\n", $time, $level, $cip, $c_file, $c_line, $msg);
+			$line = sprintf("%s [%-5s]$cip [%s:%s] %s\n", $time, $level, $c_file, $c_line, $msg);
 			file_put_contents($filename, $line, FILE_APPEND);
 			@chmod($filename, 0666);
 		}
