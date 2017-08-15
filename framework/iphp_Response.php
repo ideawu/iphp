@@ -163,37 +163,31 @@ class iphp_Response
 	}
 
 	private static function find_view_and_layout(){
+		// 先找 view, 如果找到, 那么找离该 view 最近的 layout
 		$view = self::find_view();
 		$view_file = false;
 		$layout_file = false;
 		if($view){
+			$view_path = $view[0];
 			$view_file = $view[1];
-			$layout_file = self::find_layout_file($view[0]);
-			if($layout_file){
-				array_unshift(App::$controller->view_path, $view[0]);
-			}
+			// 将 view 所在的目录加到前面, 优先查找
+			array_unshift(App::$controller->view_path, $view_path);
 		}
-		if(!$layout_file){
-			foreach(App::$controller->view_path as $view_path){
-				$layout_file = self::find_layout_file($view_path);
-				if($layout_file){
-					break;
-				}
-			}
-		}
+		$layout_file = self::find_layout();
 		return array($view_file, $layout_file);
 	}
 
 	private static function find_view(){
-		foreach(App::include_paths() as $path){
-			// 由 Controller 指定模板的名字
-			if(App::$controller->_render_view){
-				$action = App::$controller->_render_view;
-			}else{
-				$action = $path['action'];
-			}
-			$base = $path['base'];
-			foreach(App::$controller->view_path as $view_path){
+		foreach(App::$controller->view_path as $view_path){
+			foreach(App::include_paths() as $path){
+				// 由 Controller 指定模板的名字
+				if(App::$controller->_render_view){
+					$action = App::$controller->_render_view;
+				}else{
+					$action = $path['action'];
+				}
+				$base = $path['base'];
+
 				$dir = rtrim(APP_PATH . "/$view_path/$base", '/');
 				if($action == 'index'){
 					$file = $dir . '.tpl.php';
@@ -210,16 +204,26 @@ class iphp_Response
 		return false;
 	}
 
-	private static function find_layout_file($view_path){
-		$layout = 'layout';
-		$path = base_path();
+	private static function find_layout(){
 		if(App::$controller->layout === false){
 			return false;
 		}
+		foreach(App::$controller->view_path as $view_path){
+			$file = self::find_layout_file($view_path);
+			if($file){
+				return $file;
+			}
+		}
+		return false;
+	}
+	
+	private static function find_layout_file($view_path){
+		$layout = 'layout';
 		if(App::$controller->layout){
 			$layout = App::$controller->layout;
 		}
 	
+		$path = base_path();
 		$ps = explode('/', $path);
 		while(1){
 			$base = join('/', $ps);
