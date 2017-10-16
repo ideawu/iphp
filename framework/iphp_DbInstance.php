@@ -43,9 +43,8 @@ class iphp_DbInstance
 
 	function connection(){
 		if($this->readonly){
-			$readonly_db = null;
 			if($this->slave === null){
-				if(isset($this->config['readonly_db'])){
+				if(isset($this->config['readonly_db']) && $this->config['readonly_db']){
 					$this->slave = new Mysql_i($this->config['readonly_db']);
 					$this->slave->readonly = true;
 				}
