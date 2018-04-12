@@ -113,11 +113,11 @@ class Logger{
 			}
 
 			if(self::$showip){
-				if($_SERVER["HTTP_CLIENT_IP"] && $_SERVER["HTTP_CLIENT_IP"]!='unknown'){
+				if($_SERVER["HTTP_CLIENT_IP"] && $_SERVER["HTTP_CLIENT_IP"]!='0.0.0.0'){
 					$cip = $_SERVER["HTTP_CLIENT_IP"];
-				}else if($_SERVER["HTTP_X_FORWARDED_FOR"] && $_SERVER["HTTP_X_FORWARDED_FOR"]!='unknown'){
+				}else if($_SERVER["HTTP_X_FORWARDED_FOR"] && $_SERVER["HTTP_X_FORWARDED_FOR"]!='0.0.0.0'){
 					$cip = $_SERVER["HTTP_X_FORWARDED_FOR"];
-				}else if($_SERVER["REMOTE_ADDR"] && $_SERVER["REMOTE_ADDR"]!='unknown'){
+				}else if($_SERVER["REMOTE_ADDR"] && $_SERVER["REMOTE_ADDR"]!='0.0.0.0'){
 					$cip = $_SERVER["REMOTE_ADDR"];
 				}else{
 					$cip = "0.0.0.0";
