@@ -161,7 +161,6 @@ class Mysql_i{
 		if($time > 1000){
 			Logger::debug("long transaction: $time ms");
 		}
-		Logger::debug("long transaction: $time ms");
 		return $this->conn->query("commit");
 	}
 
