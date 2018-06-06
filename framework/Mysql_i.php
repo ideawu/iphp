@@ -10,6 +10,7 @@ class Mysql_i{
 	public $query_count = 0;
 	var $readonly = false;
 	private $dbname = '';
+	private $tranx_stime = 0;
 
 	public function __construct($c){
 		if(!isset($c['port'])){
@@ -147,6 +148,7 @@ class Mysql_i{
 	 * 开始一个事务.
 	 */
 	public function begin(){
+		$this->tranx_stime = microtime(1);
 		return $this->conn->query("begin");
 	}
 
@@ -154,6 +156,12 @@ class Mysql_i{
 	 * 提交一个事务.
 	 */
 	public function commit(){
+		$etime = microtime(true);
+		$time = number_format(($etime - $this->tranx_stime) * 1000, 2);
+		if($time > 1000){
+			Logger::debug("long transaction: $time ms");
+		}
+		Logger::debug("long transaction: $time ms");
 		return $this->conn->query("commit");
 	}
 
