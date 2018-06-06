@@ -62,9 +62,10 @@ class Mysql_i{
 		}
 
 		$etime = microtime(true);
-		$time = number_format(($etime - $stime) * 1000, 2);
+		$time = ($etime - $stime) * 1000;
+		$time_s = number_format($time, 2);
 		$ro = $this->readonly? '[RO]' : '[RW]';
-		$log = "{$this->dbname} {$ro} {$time} $sql";
+		$log = "{$this->dbname} {$ro} {$time_s} $sql";
 		if(defined('ENV') && ENV == 'dev'){
 			$this->query_list[] = $log;
 		}
@@ -157,12 +158,13 @@ class Mysql_i{
 	 */
 	public function commit(){
 		$etime = microtime(true);
-		$time = number_format(($etime - $this->tranx_stime) * 1000, 2);
+		$time = ($etime - $this->tranx_stime) * 1000;
 		if($time > 1000){
 			$bt = debug_backtrace(false);
 			$c_file = basename($bt[5]['file']);
 			$c_line = $bt[5]['line'];
-			Logger::debug("{$c_file}:{$c_line} long transaction: $time ms");
+			$time_s = number_format($time, 2);
+			Logger::debug("{$c_file}:{$c_line} long transaction: $time_s ms");
 		}
 		return $this->conn->query("commit");
 	}
