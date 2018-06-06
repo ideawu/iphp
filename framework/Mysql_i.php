@@ -159,7 +159,10 @@ class Mysql_i{
 		$etime = microtime(true);
 		$time = number_format(($etime - $this->tranx_stime) * 1000, 2);
 		if($time > 1000){
-			Logger::debug("long transaction: $time ms");
+			$bt = debug_backtrace(false);
+			$c_file = basename($bt[5]['file']);
+			$c_line = $bt[5]['line'];
+			Logger::debug("{$c_file}:{$c_line} long transaction: $time ms");
 		}
 		return $this->conn->query("commit");
 	}
