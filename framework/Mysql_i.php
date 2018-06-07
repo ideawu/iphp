@@ -11,6 +11,7 @@ class Mysql_i{
 	var $readonly = false;
 	private $dbname = '';
 	private $tranx_stime = 0;
+	private $tranx_queries = 0;
 
 	public function __construct($c){
 		if(!isset($c['port'])){
@@ -59,6 +60,10 @@ class Mysql_i{
 			}else{
 				throw new Exception('db error');
 			}
+		}
+		
+		if($this->tranx_stime){
+			$this->tranx_queries ++;
 		}
 
 		$etime = microtime(true);
@@ -150,6 +155,7 @@ class Mysql_i{
 	 */
 	public function begin(){
 		$this->tranx_stime = microtime(1);
+		$this->tranx_queries = 0;
 		return $this->conn->query("begin");
 	}
 
@@ -164,8 +170,10 @@ class Mysql_i{
 			$c_file = basename($bt[5]['file']);
 			$c_line = $bt[5]['line'];
 			$time_s = number_format($time, 2);
-			Logger::debug("{$c_file}:{$c_line} long transaction: $time_s ms");
+			Logger::debug("{$c_file}:{$c_line} long transaction: $time_s ms, queries: {$this->tranx_queries}");
 		}
+		$this->tranx_stime = 0;
+		$this->tranx_queries = 0;
 		return $this->conn->query("commit");
 	}
 
@@ -173,6 +181,8 @@ class Mysql_i{
 	 * 回滚一个事务.
 	 */
 	public function rollback(){
+		$this->tranx_stime = 0;
+		$this->tranx_queries = 0;
 		return $this->conn->query("rollback");
 	}
 
