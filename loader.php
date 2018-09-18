@@ -11,7 +11,7 @@ $AUTOLOAD_PATH =  array(
 	APP_PATH . '/classes',
 );
 
-function __autoload($cls){
+spl_autoload_register(function ($cls){
 	global $AUTOLOAD_PATH;
 	foreach($AUTOLOAD_PATH as $dir){
 		$file = $dir . '/' . $cls . '.php';
@@ -24,7 +24,7 @@ function __autoload($cls){
 #	if(!class_exists($cls, false)){
 #		throw new Exception("Class $cls not found!");
 #	}
-}
+});
 
 // init application
 App::init();
