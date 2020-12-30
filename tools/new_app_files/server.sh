@@ -21,7 +21,8 @@ start_fpm(){
 
 stop_fpm(){
 	printf "stopping php-fpm"
-	for ((i=0; ; i++)); do
+	i=0
+	while [ "$i" -le 99999 ]; do
 		if [ $((i%10)) = 0 ]; then
 			printf "."
 		fi
@@ -50,12 +51,12 @@ ask_restart_fpm(){
 	start_fpm
 }
 
-case "$1" in 
+case "$1" in
 	'start')
 		stop_fpm
 		start_fpm
 		;;
-	'stop') 
+	'stop')
 		stop_fpm
 		;;
 	'restart')
@@ -64,6 +65,6 @@ case "$1" in
 		;;
 	*)
 		echo "Usage: $0 {start|stop|restart}"
-		exit 1  
+		exit 1
 		;;
 esac

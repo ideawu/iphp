@@ -11,6 +11,8 @@ if(!preg_match('/^[a-z0-9-\.]+$/i', $APP['NAME'])){
 }
 read_conf('DOMAIN');
 read_conf('PHP_FPM.PORT');
+read_conf('PHP_FPM.USER', 'www-data');
+read_conf('PHP_FPM.GROUP', 'www-data');
 
 $ret = generate();
 if($ret !== false){
@@ -51,7 +53,7 @@ function generate(){
 		if(is_dir($src)){
 			continue;
 		}
-	
+
 		#echo "$src => $dst\n";
 		$ps = explode('.', $src);
 		$ext = $ps[count($ps) - 1];
@@ -75,15 +77,24 @@ function compile_file($file){
 	return $text;
 }
 
-function read_conf($k){
+function read_conf($k, $def=null){
 	global $APP;
 	while(1){
-		echo "\$APP['$k']: ";
+		if($def === null){
+			echo "\$APP['$k']: ";
+		}else{
+			echo "\$APP['$k'] (default: $def): ";
+		}
 		$line = fgets(STDIN);
 		$line = trim($line);
 		if(strlen($line)){
 			$APP[$k] = $line;
 			break;
+		}else{
+			if($def !== null){
+				$APP[$k] = $def;
+				break;
+			}
 		}
 	}
 }
